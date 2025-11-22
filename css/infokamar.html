@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info Kamar - SIKOS</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100%;
+            background: #f8fafc;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: white;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0 0 2px 0;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Room Hero Card */
+        .room-hero {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 32px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-hero::before {
+            content: '🏠';
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 200px;
+            opacity: 0.1;
+        }
+
+        .room-number {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 0 0 8px 0;
+        }
+
+        .room-type {
+            font-size: 18px;
+            opacity: 0.9;
+            margin: 0 0 24px 0;
+        }
+
+        .room-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .room-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 16px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .room-stat-label {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0 0 4px 0;
+        }
+
+        .room-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .info-card-icon {
+            font-size: 32px;
+        }
+
+        .info-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .info-item-content {
+            flex: 1;
+        }
+
+        .info-item-label {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 4px 0;
+        }
+
+        .info-item-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Facilities Grid */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .facility-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .facility-item:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .facility-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .facility-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Rules Section */
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .rule-number {
+            background: #2563eb;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .rule-text {
+            font-size: 14px;
+            color: #1e293b;
+            line-height: 1.6;
+            margin: 4px 0 0 0;
+        }
+
+        /* Contact Cards */
+        .contact-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .contact-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .contact-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .contact-avatar {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 4px 0;
+        }
+
+        .contact-role {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .contact-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .contact-btn:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-paid {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #16a34a;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .room-hero {
+                padding: 24px;
+            }
+
+            .room-number {
+                font-size: 36px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .facilities-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container"><!-- Sidebar -->
+   <aside class="sidebar">
+    <div class="sidebar-header">
+     <div class="sidebar-logo"><span>🏠</span> <span>SIKOS</span>
+     </div>
+     <p class="sidebar-subtitle">Sistem Informasi Kos</p>
+    </div>
+    <nav class="sidebar-menu"><a href="#" class="menu-item" onclick="showToast('Dashboard', 'Kembali ke Dashboard', 'success'); return false;"> <span class="menu-icon">📊</span> <span>Dashboard</span> </a> <a href="#" class="menu-item" onclick="showToast('Pembayaran', 'Halaman Pembayaran', 'success'); return false;"> <span class="menu-icon">💰</span> <span>Pembayaran</span> </a> <a href="#" class="menu-item" onclick="showToast('Riwayat', 'Halaman Riwayat', 'success'); return false;"> <span class="menu-icon">📋</span> <span>Riwayat</span> </a> <a href="#" class="menu-item" onclick="showToast('Komplain', 'Halaman Komplain', 'success'); return false;"> <span class="menu-icon">📝</span> <span>Komplain</span> </a> <a href="#" class="menu-item active" onclick="showToast('Info Kamar', 'Anda sudah di halaman Info Kamar', 'success'); return false;"> <span class="menu-icon">🚪</span> <span>Info Kamar</span> </a> <a href="#" class="menu-item" onclick="showToast('Profil', 'Fitur Profil akan segera tersedia', 'success'); return false;"> <span class="menu-icon">👤</span> <span>Profil</span> </a> <a href="#" class="menu-item" onclick="showToast('Pengaturan', 'Fitur Pengaturan akan segera tersedia', 'success'); return false;"> <span class="menu-icon">⚙️</span> <span>Pengaturan</span> </a>
+    </nav>
+    <div class="sidebar-footer">
+     <div class="user-profile">
+      <div class="user-avatar">
+       👨
+      </div>
+      <div class="user-info">
+       <p class="user-name" id="profile-name">Ahmad Rizki</p>
+       <p class="user-role">Penghuni Kamar A12</p>
+      </div>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="main-content"><!-- Page Header -->
+    <div class="page-header">
+     <h1 class="page-title" id="page-title">🚪 Informasi Kamar</h1>
+     <p class="page-subtitle" id="page-subtitle">Detail lengkap tentang kamar yang Anda tempati</p>
+    </div><!-- Room Hero -->
+    <div class="room-hero">
+     <h2 class="room-number" id="room-number">Kamar A12</h2>
+     <p class="room-type" id="room-type">Kamar Standard • Lantai 1 • Area A</p>
+     <div class="room-stats">
+      <div class="room-stat">
+       <p class="room-stat-label">Status Hunian</p>
+       <p class="room-stat-value">✅ Aktif</p>
+      </div>
+      <div class="room-stat">
+       <p class="room-stat-label">Durasi Tinggal</p>
+       <p class="room-stat-value">4 Bulan</p>
+      </div>
+      <div class="room-stat">
+       <p class="room-stat-label">Tarif/Bulan</p>
+       <p class="room-stat-value">Rp 1.200.000</p>
+      </div>
+      <div class="room-stat">
+       <p class="room-stat-label">Status Bayar</p>
+       <p class="room-stat-value">💚 Lunas</p>
+      </div>
+     </div>
+    </div><!-- Info Grid -->
+    <div class="info-grid"><!-- Specifications -->
+     <div class="info-card">
+      <div class="info-card-header"><span class="info-card-icon">📐</span>
+       <h3 class="info-card-title">Spesifikasi Kamar</h3>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">📏</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Ukuran</p>
+         <p class="info-item-value">3 x 4 meter (12 m²)</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">👥</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Kapasitas</p>
+         <p class="info-item-value">1 Orang</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🪟</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Ventilasi</p>
+         <p class="info-item-value">1 Jendela + AC</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🚪</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Kamar Mandi</p>
+         <p class="info-item-value">Dalam (Private)</p>
+        </div></li>
+      </ul>
+     </div><!-- Payment Info -->
+     <div class="info-card">
+      <div class="info-card-header"><span class="info-card-icon">💰</span>
+       <h3 class="info-card-title">Informasi Pembayaran</h3>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">💵</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Sewa/Bulan</p>
+         <p class="info-item-value">Rp 1.200.000</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">⚡</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Listrik</p>
+         <p class="info-item-value">Termasuk (Token)</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">💧</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Air</p>
+         <p class="info-item-value">Termasuk</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">📅</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Jatuh Tempo</p>
+         <p class="info-item-value">Setiap tanggal 5</p>
+        </div></li>
+      </ul>
+     </div><!-- Schedule -->
+     <div class="info-card">
+      <div class="info-card-header"><span class="info-card-icon">📅</span>
+       <h3 class="info-card-title">Jadwal &amp; Layanan</h3>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">🧹</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Cleaning Service</p>
+         <p class="info-item-value">Setiap Senin &amp; Kamis</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🧺</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Laundry</p>
+         <p class="info-item-value">2x Seminggu (Gratis)</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🔧</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Maintenance</p>
+         <p class="info-item-value">Setiap Sabtu</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🗑️</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Pengambilan Sampah</p>
+         <p class="info-item-value">Setiap Hari (18:00)</p>
+        </div></li>
+      </ul>
+     </div>
+    </div><!-- Facilities -->
+    <div class="info-card" style="margin-bottom: 32px;">
+     <div class="info-card-header"><span class="info-card-icon">✨</span>
+      <h3 class="info-card-title">Fasilitas Kamar</h3>
+     </div>
+     <div class="facilities-grid">
+      <div class="facility-item">
+       <div class="facility-icon">
+        ❄️
+       </div>
+       <p class="facility-name">AC</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🛏️
+       </div>
+       <p class="facility-name">Kasur</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🚿
+       </div>
+       <p class="facility-name">Shower</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🚽
+       </div>
+       <p class="facility-name">Toilet</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        📶
+       </div>
+       <p class="facility-name">WiFi</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🪑
+       </div>
+       <p class="facility-name">Meja</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        💡
+       </div>
+       <p class="facility-name">Lampu</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🔌
+       </div>
+       <p class="facility-name">Stopkontak</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🗄️
+       </div>
+       <p class="facility-name">Lemari</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🪞
+       </div>
+       <p class="facility-name">Cermin</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🗑️
+       </div>
+       <p class="facility-name">Tempat Sampah</p>
+      </div>
+      <div class="facility-item">
+       <div class="facility-icon">
+        🪝
+       </div>
+       <p class="facility-name">Gantungan</p>
+      </div>
+     </div>
+    </div><!-- Rules -->
+    <div class="info-card" style="margin-bottom: 32px;">
+     <div class="info-card-header"><span class="info-card-icon">📜</span>
+      <h3 class="info-card-title">Aturan &amp; Tata Tertib</h3>
+     </div>
+     <ul class="rules-list">
+      <li class="rule-item"><span class="rule-number">1</span> <p class="rule-text">Dilarang membawa tamu menginap tanpa izin pengelola</p></li>
+      <li class="rule-item"><span class="rule-number">2</span> <p class="rule-text">Jam malam untuk tamu pukul 22:00 WIB</p></li>
+      <li class="rule-item"><span class="rule-number">3</span> <p class="rule-text">Dilarang membuat keributan yang mengganggu penghuni lain</p></li>
+      <li class="rule-item"><span class="rule-number">4</span> <p class="rule-text">Menjaga kebersihan kamar dan area bersama</p></li>
+      <li class="rule-item"><span class="rule-number">5</span> <p class="rule-text">Dilarang memasak di dalam kamar (gunakan dapur bersama)</p></li>
+      <li class="rule-item"><span class="rule-number">6</span> <p class="rule-text">Lapor segera jika ada kerusakan fasilitas</p></li>
+     </ul>
+    </div><!-- Emergency Contacts -->
+    <div class="info-card">
+     <div class="info-card-header"><span class="info-card-icon">📞</span>
+      <h3 class="info-card-title">Kontak Darurat</h3>
+     </div>
+     <div class="contact-card">
+      <div class="contact-header">
+       <div class="contact-avatar">
+        👨‍💼
+       </div>
+       <div class="contact-info">
+        <h4 class="contact-name">Pak Budi Santoso</h4>
+        <p class="contact-role">Pengelola Kos</p>
+       </div>
+      </div>
+      <div class="contact-actions"><button class="contact-btn" onclick="showToast('Telepon', 'Menghubungi: 0812-3456-7890', 'success')"> <span>📞</span> <span>Telepon</span> </button> <button class="contact-btn" onclick="showToast('WhatsApp', 'Membuka WhatsApp...', 'success')"> <span>💬</span> <span>WhatsApp</span> </button>
+      </div>
+     </div>
+     <div class="contact-card">
+      <div class="contact-header">
+       <div class="contact-avatar">
+        👮
+       </div>
+       <div class="contact-info">
+        <h4 class="contact-name">Security 24 Jam</h4>
+        <p class="contact-role">Tim Keamanan</p>
+       </div>
+      </div>
+      <div class="contact-actions"><button class="contact-btn" onclick="showToast('Security', 'Menghubungi security...', 'success')"> <span>🚨</span> <span>Hubungi Security</span> </button> <button class="contact-btn" onclick="showToast('Lokasi', 'Security pos di lantai dasar', 'success')"> <span>📍</span> <span>Lokasi Pos</span> </button>
+      </div>
+     </div>
+     <div class="contact-card">
+      <div class="contact-header">
+       <div class="contact-avatar">
+        🔧
+       </div>
+       <div class="contact-info">
+        <h4 class="contact-name">Teknisi Maintenance</h4>
+        <p class="contact-role">Tim Perbaikan</p>
+       </div>
+      </div>
+      <div class="contact-actions"><button class="contact-btn" onclick="showToast('Maintenance', 'Membuat tiket maintenance...', 'success')"> <span>🛠️</span> <span>Request Perbaikan</span> </button> <button class="contact-btn" onclick="showToast('Komplain', 'Membuka form komplain...', 'success')"> <span>📝</span> <span>Komplain</span> </button>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="toast">
+   <div id="toast-icon" style="font-size: 32px;">
+    ✅
+   </div>
+   <div>
+    <p id="toast-title" style="margin: 0 0 4px 0; font-weight: 700; font-size: 15px;">Berhasil!</p>
+    <p id="toast-message" style="margin: 0; font-size: 13px;">Operasi berhasil dilakukan</p>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            page_title: "🚪 Informasi Kamar",
+            page_subtitle: "Detail lengkap tentang kamar yang Anda tempati",
+            user_name: "Ahmad Rizki",
+            room_number: "Kamar A12",
+            room_type: "Kamar Standard • Lantai 1 • Area A",
+            background_color: "#f8fafc",
+            sidebar_color: "#2563eb",
+            card_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#2563eb",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+
+            icon.textContent = '✅';
+            toastTitle.style.color = '#166534';
+            toastMessage.style.color = '#15803d';
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) {
+                pageTitle.textContent = config.page_title || defaultConfig.page_title;
+                pageTitle.style.fontSize = `${baseSize * 2}px`;
+            }
+
+            const pageSubtitle = document.getElementById('page-subtitle');
+            if (pageSubtitle) {
+                pageSubtitle.textContent = config.page_subtitle || defaultConfig.page_subtitle;
+                pageSubtitle.style.fontSize = `${baseSize}px`;
+            }
+
+            const profileName = document.getElementById('profile-name');
+            if (profileName) {
+                profileName.textContent = config.user_name || defaultConfig.user_name;
+            }
+
+            const roomNumber = document.getElementById('room-number');
+            if (roomNumber) {
+                roomNumber.textContent = config.room_number || defaultConfig.room_number;
+                roomNumber.style.fontSize = `${baseSize * 3}px`;
+            }
+
+            const roomType = document.getElementById('room-type');
+            if (roomType) {
+                roomType.textContent = config.room_type || defaultConfig.room_type;
+                roomType.style.fontSize = `${baseSize * 1.125}px`;
+            }
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const sidebarColor = config.sidebar_color || defaultConfig.sidebar_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+
+            document.body.style.background = bgColor;
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.style.background = `linear-gradient(180deg, ${sidebarColor} 0%, ${adjustBrightness(sidebarColor, -20)} 100%)`;
+            }
+
+            document.querySelectorAll('.info-card, .contact-card').forEach(el => {
+                el.style.background = cardColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3, h4, p, span, button, li').forEach(el => {
+                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+        }
+
+        function adjustBrightness(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 +
+                (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.sidebar_color || defaultConfig.sidebar_color,
+                            set: (value) => {
+                                config.sidebar_color = value;
+                                window.elementSdk.setConfig({ sidebar_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                    ["user_name", config.user_name || defaultConfig.user_name],
+                    ["room_number", config.room_number || defaultConfig.room_number],
+                    ["room_type", config.room_type || defaultConfig.room_type]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a03ef0054ace780',t:'MTc2MzQzMTg0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

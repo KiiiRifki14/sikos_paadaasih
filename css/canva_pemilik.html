@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIKOS - Dashboard Pemilik</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100%;
+            background: #f8fafc;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: white;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100%;
+            padding: 24px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border-left-color: #2563eb;
+        }
+
+        .nav-item-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
+            color: #475569;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .topbar {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: -24px -24px 24px -24px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .process-flow {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .flow-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .flow-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .flow-content {
+            flex: 1;
+        }
+
+        .data-tag {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin: 4px 4px 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body><!-- Sidebar -->
+  <aside class="sidebar">
+   <div style="padding: 24px 20px; border-bottom: 1px solid #e2e8f0;">
+    <h1 id="site-title" style="margin: 0; font-size: 24px; font-weight: 700; color: #1e293b;">SIKOS</h1>
+    <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">Owner Dashboard</p>
+   </div>
+   <nav style="padding: 16px 0;"><a class="nav-item active" onclick="showSection('dashboard')"> <span class="nav-item-icon">📊</span> <span>Dashboard</span> </a> <a class="nav-item" onclick="showSection('rooms')"> <span class="nav-item-icon">🏠</span> <span>Kelola Kamar</span> </a> <a class="nav-item" onclick="showSection('bookings')"> <span class="nav-item-icon">📝</span> <span>Verifikasi Booking</span> </a> <a class="nav-item" onclick="showSection('bills')"> <span class="nav-item-icon">💰</span> <span>Tagihan Bulanan</span> </a> <a class="nav-item" onclick="showSection('payments')"> <span class="nav-item-icon">✅</span> <span>Verifikasi Pembayaran</span> </a> <a class="nav-item" onclick="showSection('announcements')"> <span class="nav-item-icon">📢</span> <span>Pengumuman</span> </a> <a class="nav-item" onclick="showSection('reports')"> <span class="nav-item-icon">📈</span> <span>Laporan</span> </a>
+   </nav>
+   <div style="padding: 20px; border-top: 1px solid #e2e8f0; margin-top: auto;">
+    <div style="font-size: 12px; color: #94a3b8;">
+     <p style="margin: 0 0 8px 0; font-weight: 600;">DFD Level-1 &amp; Level-2</p>
+     <p style="margin: 0; line-height: 1.5;">Visualisasi proses dan aliran data sistem SIKOS</p>
+    </div>
+   </div>
+  </aside><!-- Main Content -->
+  <main class="main-content"><!-- Topbar -->
+   <div class="topbar">
+    <div>
+     <h2 id="welcome-text" style="margin: 0; font-size: 20px; font-weight: 600; color: #1e293b;">Selamat Datang, Admin</h2>
+     <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">Kelola operasional kos Anda</p>
+    </div>
+    <div class="user-menu"><button class="btn btn-primary">🔔 Notifikasi</button>
+     <div class="avatar">
+      A
+     </div>
+    </div>
+   </div><!-- Dashboard Section -->
+   <div id="section-dashboard" class="content-section"><!-- Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 24px;">
+     <div class="stat-card">
+      <div class="stat-icon" style="background: #dbeafe; color: #2563eb;">
+       🏠
+      </div>
+      <div>
+       <p id="total-rooms-label" style="margin: 0; font-size: 14px; color: #64748b; font-weight: 500;">Total Kamar</p>
+       <h3 style="margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #1e293b;">24</h3>
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">
+       ✅
+      </div>
+      <div>
+       <p id="occupied-rooms-label" style="margin: 0; font-size: 14px; color: #64748b; font-weight: 500;">Kamar Terisi</p>
+       <h3 style="margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #1e293b;">18</h3>
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+       ⏳
+      </div>
+      <div>
+       <p id="pending-payments-label" style="margin: 0; font-size: 14px; color: #64748b; font-weight: 500;">Pembayaran Pending</p>
+       <h3 style="margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #1e293b;">5</h3>
+      </div>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon" style="background: #f3e8ff; color: #9333ea;">
+       💵
+      </div>
+      <div>
+       <p id="monthly-revenue-label" style="margin: 0; font-size: 14px; color: #64748b; font-weight: 500;">Pendapatan Bulan Ini</p>
+       <h3 style="margin: 8px 0 0 0; font-size: 32px; font-weight: 700; color: #1e293b;">45jt</h3>
+      </div>
+     </div>
+    </div><!-- Recent Activities -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+     <div class="card">
+      <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #1e293b;">Booking Terbaru</h3>
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Penghuni</th>
+         <th>Kamar</th>
+         <th>Status</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td style="font-weight: 500;">Budi Santoso</td>
+         <td>Kamar 101</td>
+         <td><span class="badge badge-warning">Pending</span></td>
+        </tr>
+        <tr>
+         <td style="font-weight: 500;">Siti Aminah</td>
+         <td>Kamar 205</td>
+         <td><span class="badge badge-success">Verified</span></td>
+        </tr>
+        <tr>
+         <td style="font-weight: 500;">Ahmad Rizki</td>
+         <td>Kamar 103</td>
+         <td><span class="badge badge-warning">Pending</span></td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <div class="card">
+      <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #1e293b;">Pembayaran Pending</h3>
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Penghuni</th>
+         <th>Periode</th>
+         <th>Jumlah</th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td style="font-weight: 500;">Dewi Lestari</td>
+         <td>Jan 2024</td>
+         <td style="font-weight: 600; color: #2563eb;">Rp 2.5jt</td>
+        </tr>
+        <tr>
+         <td style="font-weight: 500;">Eko Prasetyo</td>
+         <td>Jan 2024</td>
+         <td style="font-weight: 600; color: #2563eb;">Rp 2.0jt</td>
+        </tr>
+        <tr>
+         <td style="font-weight: 500;">Rina Wati</td>
+         <td>Jan 2024</td>
+         <td style="font-weight: 600; color: #2563eb;">Rp 2.5jt</td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div><!-- DFD Process Overview -->
+    <div class="card">
+     <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #1e293b;">📊 Proses &amp; Aliran Data Utama</h3>
+     <div class="process-flow">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1e293b;">1. Verifikasi Pembayaran Booking</h4>
+      <div class="flow-step">
+       <div class="flow-icon">
+        📥
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Input Data:</p><span class="data-tag">Data Bukti Booking</span> <span class="data-tag">Perintah Verifikasi</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon">
+        📤
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Output Data:</p><span class="data-tag">Info Hasil Verifikasi</span> <span class="data-tag">Aktivasi Kontrak</span>
+       </div>
+      </div>
+     </div>
+     <div class="process-flow" style="border-left-color: #16a34a;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1e293b;">2. Generate Tagihan Bulanan</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #16a34a;">
+        📥
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Input Data:</p><span class="data-tag">Perintah Generate</span> <span class="data-tag">Periode Tagihan</span> <span class="data-tag">Jumlah Tagihan</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #16a34a;">
+        📤
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Output Data:</p><span class="data-tag">Info Hasil Generate</span> <span class="data-tag">Data Tagihan ke Database</span>
+       </div>
+      </div>
+     </div>
+     <div class="process-flow" style="border-left-color: #d97706;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1e293b;">3. Verifikasi Pembayaran Tagihan</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #d97706;">
+        📥
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Input Data:</p><span class="data-tag">Data Bukti Tagihan</span> <span class="data-tag">Perintah Verifikasi</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #d97706;">
+        📤
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Output Data:</p><span class="data-tag">Info Status Tagihan</span> <span class="data-tag">Status Lunas/Pending</span>
+       </div>
+      </div>
+     </div>
+     <div class="process-flow" style="border-left-color: #9333ea;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1e293b;">4. Kelola Pengumuman</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #9333ea;">
+        📥
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Input Data:</p><span class="data-tag">Data Pengumuman</span> <span class="data-tag">Judul</span> <span class="data-tag">Isi</span> <span class="data-tag">Tanggal</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #9333ea;">
+        📤
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0 0 8px 0; font-weight: 500; color: #334155;">Output Data:</p><span class="data-tag">Info Pengumuman</span> <span class="data-tag">Broadcast ke Penghuni</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Other Sections (Hidden by default) -->
+   <div id="section-rooms" class="content-section" style="display: none;">
+    <div class="card">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1e293b;">Kelola Kamar</h2><button class="btn btn-primary">+ Tambah Kamar</button>
+     </div>
+     <p style="color: #64748b; margin-bottom: 20px;">Mengelola data kamar, tipe, harga, dan fasilitas</p>
+     <div class="process-flow">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600;">Aliran Data Pengelolaan Kamar</h4>
+      <div class="flow-step">
+       <div class="flow-icon">
+        📥
+       </div>
+       <div class="flow-content"><span class="data-tag">Data Kamar (nomor, tipe, harga, fasilitas)</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon">
+        📤
+       </div>
+       <div class="flow-content"><span class="data-tag">Info Kamar (status tersedia/terisi)</span> <span class="data-tag">Info Detail &amp; Galeri</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div id="section-bookings" class="content-section" style="display: none;">
+    <div class="card">
+     <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: #1e293b;">Verifikasi Booking</h2>
+     <p style="color: #64748b; margin-bottom: 20px;">Verifikasi pembayaran booking dan aktivasi kontrak penghuni</p>
+     <table class="table">
+      <thead>
+       <tr>
+        <th>Nama Penghuni</th>
+        <th>Kamar</th>
+        <th>Tanggal Booking</th>
+        <th>Jumlah</th>
+        <th>Status</th>
+        <th>Aksi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td style="font-weight: 500;">Budi Santoso</td>
+        <td>Kamar 101</td>
+        <td>15 Jan 2024</td>
+        <td style="font-weight: 600;">Rp 2.5jt</td>
+        <td><span class="badge badge-warning">Pending</span></td>
+        <td><button class="btn btn-success" style="margin-right: 8px;">✓ Approve</button> <button class="btn btn-danger">✗ Reject</button></td>
+       </tr>
+       <tr>
+        <td style="font-weight: 500;">Ahmad Rizki</td>
+        <td>Kamar 103</td>
+        <td>16 Jan 2024</td>
+        <td style="font-weight: 600;">Rp 2.0jt</td>
+        <td><span class="badge badge-warning">Pending</span></td>
+        <td><button class="btn btn-success" style="margin-right: 8px;">✓ Approve</button> <button class="btn btn-danger">✗ Reject</button></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div id="section-bills" class="content-section" style="display: none;">
+    <div class="card">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1e293b;">Tagihan Bulanan</h2><button class="btn btn-primary">+ Generate Tagihan</button>
+     </div>
+     <p style="color: #64748b; margin-bottom: 20px;">Generate dan kelola tagihan bulanan untuk semua penghuni</p>
+     <div class="process-flow" style="border-left-color: #16a34a;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600;">Proses Generate Tagihan</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #16a34a;">
+        1
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0; font-weight: 500;">Pilih periode tagihan (bulan &amp; tahun)</p>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #16a34a;">
+        2
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0; font-weight: 500;">Sistem generate tagihan untuk semua penghuni aktif</p>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #16a34a;">
+        3
+       </div>
+       <div class="flow-content">
+        <p style="margin: 0; font-weight: 500;">Tagihan tersimpan dan notifikasi dikirim ke penghuni</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div id="section-payments" class="content-section" style="display: none;">
+    <div class="card">
+     <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: #1e293b;">Verifikasi Pembayaran Tagihan</h2>
+     <p style="color: #64748b; margin-bottom: 20px;">Verifikasi bukti pembayaran tagihan bulanan dari penghuni</p>
+     <table class="table">
+      <thead>
+       <tr>
+        <th>Nama Penghuni</th>
+        <th>Periode</th>
+        <th>Jumlah</th>
+        <th>Tanggal Upload</th>
+        <th>Status</th>
+        <th>Aksi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td style="font-weight: 500;">Dewi Lestari</td>
+        <td>Januari 2024</td>
+        <td style="font-weight: 600;">Rp 2.5jt</td>
+        <td>18 Jan 2024</td>
+        <td><span class="badge badge-warning">Pending</span></td>
+        <td><button class="btn btn-success" style="margin-right: 8px;">✓ Verifikasi</button> <button class="btn btn-danger">✗ Tolak</button></td>
+       </tr>
+       <tr>
+        <td style="font-weight: 500;">Eko Prasetyo</td>
+        <td>Januari 2024</td>
+        <td style="font-weight: 600;">Rp 2.0jt</td>
+        <td>17 Jan 2024</td>
+        <td><span class="badge badge-warning">Pending</span></td>
+        <td><button class="btn btn-success" style="margin-right: 8px;">✓ Verifikasi</button> <button class="btn btn-danger">✗ Tolak</button></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+   <div id="section-announcements" class="content-section" style="display: none;">
+    <div class="card">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1e293b;">Kelola Pengumuman</h2><button class="btn btn-primary">+ Buat Pengumuman</button>
+     </div>
+     <p style="color: #64748b; margin-bottom: 20px;">Buat dan kelola pengumuman untuk semua penghuni</p>
+     <div class="process-flow" style="border-left-color: #9333ea;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600;">Aliran Data Pengumuman</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #9333ea;">
+        📥
+       </div>
+       <div class="flow-content"><span class="data-tag">Judul Pengumuman</span> <span class="data-tag">Isi Pengumuman</span> <span class="data-tag">Tanggal Publish</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #9333ea;">
+        📤
+       </div>
+       <div class="flow-content"><span class="data-tag">Broadcast ke Semua Penghuni</span> <span class="data-tag">Notifikasi Push</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div id="section-reports" class="content-section" style="display: none;">
+    <div class="card">
+     <h2 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: #1e293b;">Laporan &amp; Monitoring</h2>
+     <p style="color: #64748b; margin-bottom: 20px;">Lihat laporan lengkap tentang booking, pembayaran, dan penghuni</p>
+     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px;"><button class="btn btn-primary" style="padding: 16px;">📊 Laporan Booking</button> <button class="btn btn-primary" style="padding: 16px;">💰 Laporan Pembayaran</button> <button class="btn btn-primary" style="padding: 16px;">👥 Laporan Penghuni</button> <button class="btn btn-primary" style="padding: 16px;">📈 Laporan Pendapatan</button>
+     </div>
+     <div class="process-flow" style="margin-top: 24px; border-left-color: #6366f1;">
+      <h4 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600;">Aliran Data Laporan</h4>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #6366f1;">
+        📥
+       </div>
+       <div class="flow-content"><span class="data-tag">Permintaan Laporan</span> <span class="data-tag">Periode</span> <span class="data-tag">Jenis Laporan</span>
+       </div>
+      </div>
+      <div class="flow-step">
+       <div class="flow-icon" style="background: #6366f1;">
+        📤
+       </div>
+       <div class="flow-content"><span class="data-tag">Data Laporan</span> <span class="data-tag">Export PDF/Excel</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </main>
+  <script>
+        const defaultConfig = {
+            site_title: "SIKOS",
+            welcome_text: "Selamat Datang, Admin",
+            total_rooms_label: "Total Kamar",
+            occupied_rooms_label: "Kamar Terisi",
+            pending_payments_label: "Pembayaran Pending",
+            monthly_revenue_label: "Pendapatan Bulan Ini",
+            background_color: "#f8fafc",
+            card_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#2563eb",
+            secondary_action_color: "#16a34a",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById('section-' + sectionName).style.display = 'block';
+            
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+        }
+
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+            
+            // Update text content
+            const siteTitle = document.getElementById('site-title');
+            if (siteTitle) {
+                siteTitle.textContent = config.site_title || defaultConfig.site_title;
+                siteTitle.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                siteTitle.style.fontSize = `${baseSize * 1.5}px`;
+            }
+            
+            const welcomeText = document.getElementById('welcome-text');
+            if (welcomeText) {
+                welcomeText.textContent = config.welcome_text || defaultConfig.welcome_text;
+                welcomeText.style.fontFamily = `${customFont}, ${baseFontStack}`;
+                welcomeText.style.fontSize = `${baseSize * 1.25}px`;
+            }
+
+            const totalRoomsLabel = document.getElementById('total-rooms-label');
+            if (totalRoomsLabel) {
+                totalRoomsLabel.textContent = config.total_rooms_label || defaultConfig.total_rooms_label;
+                totalRoomsLabel.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            }
+
+            const occupiedRoomsLabel = document.getElementById('occupied-rooms-label');
+            if (occupiedRoomsLabel) {
+                occupiedRoomsLabel.textContent = config.occupied_rooms_label || defaultConfig.occupied_rooms_label;
+                occupiedRoomsLabel.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            }
+
+            const pendingPaymentsLabel = document.getElementById('pending-payments-label');
+            if (pendingPaymentsLabel) {
+                pendingPaymentsLabel.textContent = config.pending_payments_label || defaultConfig.pending_payments_label;
+                pendingPaymentsLabel.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            }
+
+            const monthlyRevenueLabel = document.getElementById('monthly-revenue-label');
+            if (monthlyRevenueLabel) {
+                monthlyRevenueLabel.textContent = config.monthly_revenue_label || defaultConfig.monthly_revenue_label;
+                monthlyRevenueLabel.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            }
+
+            // Update colors
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+            const textColor = config.text_color || defaultConfig.text_color;
+            const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+            const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+            document.body.style.background = bgColor;
+            
+            document.querySelectorAll('.card, .stat-card, .sidebar, .topbar').forEach(card => {
+                card.style.background = cardColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3, h4, p, td, th').forEach(el => {
+                if (!el.style.color || el.style.color === '' || el.style.color === defaultConfig.text_color) {
+                    el.style.color = textColor;
+                }
+                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+
+            document.querySelectorAll('.btn-primary').forEach(btn => {
+                btn.style.background = primaryColor;
+            });
+
+            document.querySelectorAll('.btn-success').forEach(btn => {
+                btn.style.background = secondaryColor;
+            });
+
+            document.querySelectorAll('.nav-item.active').forEach(item => {
+                item.style.color = primaryColor;
+                item.style.borderLeftColor = primaryColor;
+            });
+
+            // Apply font sizes
+            document.querySelectorAll('h1').forEach(el => {
+                el.style.fontSize = `${baseSize * 1.5}px`;
+            });
+
+            document.querySelectorAll('h2').forEach(el => {
+                el.style.fontSize = `${baseSize * 1.25}px`;
+            });
+
+            document.querySelectorAll('h3').forEach(el => {
+                el.style.fontSize = `${baseSize * 1.125}px`;
+            });
+
+            document.querySelectorAll('p, td, th, .btn').forEach(el => {
+                el.style.fontSize = `${baseSize * 0.875}px`;
+            });
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                            set: (value) => {
+                                config.secondary_action_color = value;
+                                window.elementSdk.setConfig({ secondary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["site_title", config.site_title || defaultConfig.site_title],
+                    ["welcome_text", config.welcome_text || defaultConfig.welcome_text],
+                    ["total_rooms_label", config.total_rooms_label || defaultConfig.total_rooms_label],
+                    ["occupied_rooms_label", config.occupied_rooms_label || defaultConfig.occupied_rooms_label],
+                    ["pending_payments_label", config.pending_payments_label || defaultConfig.pending_payments_label],
+                    ["monthly_revenue_label", config.monthly_revenue_label || defaultConfig.monthly_revenue_label]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a03acdfc78ab5a5',t:'MTc2MzQyOTE0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Penghuni - SIKOS Paadaasih</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ========================================
+       CSS VARIABLES - STYLE GUIDE
+       ======================================== */
+    
+    :root {
+      /* Primary Colors */
+      --color-primary: #2563eb;
+      --color-primary-hover: #1d4ed8;
+      --color-primary-light: #dbeafe;
+      
+      /* Neutral Colors */
+      --color-white: #ffffff;
+      --color-gray-50: #f8fafc;
+      --color-gray-100: #f1f5f9;
+      --color-gray-200: #e2e8f0;
+      --color-gray-300: #cbd5e1;
+      --color-gray-400: #94a3b8;
+      --color-gray-500: #64748b;
+      --color-gray-600: #475569;
+      --color-gray-700: #334155;
+      --color-gray-800: #1e293b;
+      --color-gray-900: #0f172a;
+      
+      /* Semantic Colors */
+      --color-success: #10b981;
+      --color-success-light: #d1fae5;
+      --color-warning: #f59e0b;
+      --color-warning-light: #fef3c7;
+      --color-error: #ef4444;
+      --color-error-light: #fee2e2;
+      
+      /* Typography */
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --text-xs: 12px;
+      --text-sm: 14px;
+      --text-base: 16px;
+      --text-lg: 18px;
+      --text-xl: 20px;
+      --text-2xl: 24px;
+      --text-3xl: 30px;
+      
+      /* Font Weights */
+      --font-normal: 400;
+      --font-medium: 500;
+      --font-semibold: 600;
+      --font-bold: 700;
+      
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      
+      /* Border Radius */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      
+      /* Transitions */
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+    }
+
+    /* ========================================
+       BASE STYLES
+       ======================================== */
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: var(--font-family);
+      background: var(--color-gray-50);
+      color: var(--color-gray-900);
+      font-size: var(--text-base);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ========================================
+       LAYOUT
+       ======================================== */
+    
+    .dashboard-container {
+      display: flex;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--color-white);
+      border-right: 1px solid var(--color-gray-200);
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-base);
+      position: relative;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: var(--space-6);
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .brand-text {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--color-gray-900);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .brand-subtitle {
+      font-size: var(--text-xs);
+      color: var(--color-gray-500);
+      margin-top: var(--space-1);
+    }
+
+    .sidebar-menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4) var(--space-3);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      margin-bottom: var(--space-1);
+      border-radius: var(--radius-md);
+      color: var(--color-gray-600);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .menu-item:hover {
+      background: var(--color-gray-100);
+      color: var(--color-gray-900);
+    }
+
+    .menu-item.active {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: var(--font-semibold);
+    }
+
+    .menu-icon {
+      font-size: 20px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      padding: var(--space-4) var(--space-3);
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--color-white);
+      padding: var(--space-5) var(--space-8);
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-left h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--space-1);
+    }
+
+    .header-left p {
+      font-size: var(--text-sm);
+      color: var(--color-gray-600);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .notification-btn {
+      position: relative;
+      background: var(--color-gray-100);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 20px;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notification-btn:hover {
+      background: var(--color-gray-200);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--color-error);
+      color: white;
+      font-size: 10px;
+      font-weight: var(--font-bold);
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      border: 2px solid white;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-gray-100);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .user-profile:hover {
+      background: var(--color-gray-200);
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      color: white;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: var(--font-semibold);
+      font-size: var(--text-sm);
+      color: var(--color-gray-900);
+    }
+
+    .user-role {
+      font-size: var(--text-xs);
+      color: var(--color-gray-600);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: var(--space-2);
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      min-width: 200px;
+      display: none;
+      z-index: 1000;
+      overflow: hidden;
+      border: 1px solid var(--color-gray-200);
+    }
+
+    .dropdown-menu.active {
+      display: block;
+      animation: slideDown var(--transition-base);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dropdown-item {
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-gray-700);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: var(--text-sm);
+    }
+
+    .dropdown-item:hover {
+      background: var(--color-gray-50);
+      color: var(--color-primary);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--color-gray-200);
+      margin: var(--space-1) 0;
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-8);
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: var(--color-primary);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ========================================
+       COMPONENTS
+       ======================================== */
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-5);
+      margin-bottom: var(--space-8);
+    }
+
+    .stat-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--color-primary);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-4);
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-gray-100);
+    }
+
+    .stat-icon.primary {
+      background: var(--color-primary-light);
+    }
+
+    .stat-icon.success {
+      background: var(--color-success-light);
+    }
+
+    .stat-icon.warning {
+      background: var(--color-warning-light);
+    }
+
+    .stat-icon.error {
+      background: var(--color-error-light);
+    }
+
+    .stat-body h3 {
+      font-size: var(--text-sm);
+      color: var(--color-gray-600);
+      font-weight: var(--font-medium);
+      margin-bottom: var(--space-2);
+    }
+
+    .stat-value {
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--space-1);
+    }
+
+    .stat-change {
+      font-size: var(--text-sm);
+      color: var(--color-success);
+      font-weight: var(--font-medium);
+    }
+
+    .stat-change.negative {
+      color: var(--color-error);
+    }
+
+    /* Card */
+    .card {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-8);
+    }
+
+    .card-header {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-gray-200);
+      background: var(--color-gray-50);
+    }
+
+    .card-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--space-1);
+    }
+
+    .card-subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-gray-600);
+    }
+
+    .card-body {
+      padding: var(--space-6);
+    }
+
+    /* Room Details Grid */
+    .room-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .room-detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .room-detail-label {
+      font-size: var(--text-xs);
+      color: var(--color-gray-600);
+      font-weight: var(--font-medium);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .room-detail-value {
+      font-size: var(--text-base);
+      color: var(--color-gray-900);
+      font-weight: var(--font-semibold);
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--text-xs);
+      font-weight: var(--font-semibold);
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      width: fit-content;
+    }
+
+    .badge-success {
+      background: var(--color-success-light);
+      color: #065f46;
+    }
+
+    .badge-warning {
+      background: var(--color-warning-light);
+      color: #92400e;
+    }
+
+    .badge-error {
+      background: var(--color-error-light);
+      color: #991b1b;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-gray-200);
+    }
+
+    /* Button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      font-family: var(--font-family);
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--color-primary);
+      border-color: var(--color-gray-300);
+    }
+
+    .btn-outline:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+    }
+
+    .btn-success {
+      background: var(--color-success);
+      color: white;
+      border-color: var(--color-success);
+    }
+
+    .btn-success:hover {
+      background: #059669;
+      border-color: #059669;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-sm {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-xs);
+    }
+
+    /* Table */
+    .table-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table-header {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-gray-50);
+    }
+
+    .table-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--color-gray-900);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--color-gray-50);
+    }
+
+    th {
+      padding: var(--space-4) var(--space-6);
+      text-align: left;
+      font-size: var(--text-xs);
+      font-weight: var(--font-semibold);
+      color: var(--color-gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--color-gray-200);
+      color: var(--color-gray-700);
+      font-size: var(--text-sm);
+    }
+
+    tbody tr {
+      transition: background var(--transition-fast);
+    }
+
+    tbody tr:hover {
+      background: var(--color-gray-50);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--space-12) var(--space-6);
+      color: var(--color-gray-600);
+    }
+
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: var(--space-4);
+      opacity: 0.3;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: var(--space-4);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn var(--transition-base);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: white;
+      border-radius: var(--radius-xl);
+      max-width: 400px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp var(--transition-base);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: var(--space-6);
+      text-align: center;
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .modal-icon {
+      font-size: 56px;
+      margin-bottom: var(--space-3);
+    }
+
+    .modal-title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--space-2);
+    }
+
+    .modal-text {
+      font-size: var(--text-sm);
+      color: var(--color-gray-600);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-6);
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        z-index: 1000;
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-toggle {
+        display: flex;
+      }
+
+      .content-area {
+        padding: var(--space-5);
+      }
+
+      .header {
+        padding: var(--space-4) var(--space-5);
+      }
+
+      .user-info {
+        display: none;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .room-details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-left h1 {
+        font-size: var(--text-lg);
+      }
+
+      .quick-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!--?php
+  // TODO: Session Check & Data Fetch
+  $data = [
+    'nama' =--> 'Budi Santoso', 'email' =&gt; 'budi@email.com', 'phone' =&gt; '081234567890', 'nama_kamar' =&gt; 'Kamar Deluxe B', 'nomor_kamar' =&gt; 'B-205', 'harga' =&gt; 1200000, 'ukuran' =&gt; '4x5m', 'fasilitas' =&gt; 'AC, Wi-Fi, Kamar Mandi Dalam', 'tanggal_masuk' =&gt; '2024-01-15', 'tanggal_keluar' =&gt; '2025-01-15', 'status_pembayaran' =&gt; 'lunas', 'bulan_bayar' =&gt; 'Desember 2024', 'jatuh_tempo' =&gt; '2025-01-05' ]; ?&gt; 
+  <div class="dashboard-container"><!-- Sidebar -->
+   <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+     <div class="brand-text">
+      🏠 SIKOS
+     </div>
+     <div class="brand-subtitle">
+      Sistem Informasi Kos
+     </div>
+    </div>
+    <nav class="sidebar-menu"><a href="dashboard_penghuni.php" class="menu-item active"> <span class="menu-icon">🏠</span> <span>Dashboard</span> </a> <a href="kamar_saya.php" class="menu-item"> <span class="menu-icon">🛏️</span> <span>Kamar Saya</span> </a> <a href="pembayaran.php" class="menu-item"> <span class="menu-icon">💳</span> <span>Pembayaran</span> </a> <a href="riwayat_pembayaran.php" class="menu-item"> <span class="menu-icon">📊</span> <span>Riwayat Bayar</span> </a> <a href="komplain.php" class="menu-item"> <span class="menu-icon">📝</span> <span>Komplain</span> </a> <a href="perpanjang_kontrak.php" class="menu-item"> <span class="menu-icon">📄</span> <span>Perpanjang Kontrak</span> </a> <a href="profil.php" class="menu-item"> <span class="menu-icon">👤</span> <span>Profil Saya</span> </a>
+    </nav>
+    <div class="sidebar-footer"><button class="menu-item" onclick="showLogoutModal()"> <span class="menu-icon">🚪</span> <span>Keluar</span> </button>
+    </div>
+   </aside><!-- Main Content -->
+   <div class="main-content"><!-- Header -->
+    <header class="header">
+     <div class="header-left"><button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+      <h1>Dashboard</h1>
+      <p>Selamat datang kembali, <strong><!--?php echo $data['nama']; ?--></strong>! 👋</p>
+     </div>
+     <div class="header-right"><button class="notification-btn"> 🔔 <span class="notification-badge">3</span> </button>
+      <div class="user-profile" onclick="toggleDropdown()">
+       <div class="user-avatar"><!--?php echo strtoupper(substr($data['nama'], 0, 1)); ?-->
+       </div>
+       <div class="user-info">
+        <div class="user-name">
+         <!--?php echo $data['nama']; ?-->
+        </div>
+        <div class="user-role">
+         Penghuni
+        </div>
+       </div><span style="font-size: 12px;">▼</span>
+       <div class="dropdown-menu" id="dropdownMenu"><a href="profil.php" class="dropdown-item"> <span>👤</span> Profil Saya </a> <a href="pengaturan.php" class="dropdown-item"> <span>⚙️</span> Pengaturan </a>
+        <div class="dropdown-divider"></div><button onclick="showLogoutModal()" class="dropdown-item"> <span>🚪</span> Keluar </button>
+       </div>
+      </div>
+     </div>
+    </header><!-- Content Area -->
+    <main class="content-area"><!-- Stats Cards -->
+     <div class="stats-grid">
+      <div class="stat-card">
+       <div class="stat-header">
+        <div class="stat-body">
+         <h3>Tagihan Bulan Ini</h3>
+         <div class="stat-value">
+          Rp <!--?php echo number_format($data['harga'], 0, ',', '.'); ?-->
+         </div>
+         <div class="stat-change <?php echo $data['status_pembayaran'] == 'lunas' ? '' : 'negative'; ?>"><!--?php echo $data['status_pembayaran'] == 'lunas' ? '✓ Sudah Lunas' : '⚠️ Belum Dibayar'; ?-->
+         </div>
+        </div>
+        <div class="stat-icon primary">
+         💳
+        </div>
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-header">
+        <div class="stat-body">
+         <h3>Status Kamar</h3>
+         <div class="stat-value">
+          <!--?php echo $data['nomor_kamar']; ?-->
+         </div>
+         <div class="stat-change">
+          ✓ Aktif
+         </div>
+        </div>
+        <div class="stat-icon success">
+         🛏️
+        </div>
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-header">
+        <div class="stat-body">
+         <h3>Komplain Aktif</h3>
+         <div class="stat-value">
+          2
+         </div>
+         <div class="stat-change">
+          1 Dalam Proses
+         </div>
+        </div>
+        <div class="stat-icon warning">
+         📝
+        </div>
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-header">
+        <div class="stat-body">
+         <h3>Sisa Kontrak</h3>
+         <div class="stat-value">
+          8
+         </div>
+         <div class="stat-change">
+          Bulan Lagi
+         </div>
+        </div>
+        <div class="stat-icon error">
+         📄
+        </div>
+       </div>
+      </div>
+     </div><!-- Room Info Card -->
+     <div class="card">
+      <div class="card-header">
+       <div class="card-title">
+        🏠 Informasi Kamar Saya
+       </div>
+       <div class="card-subtitle">
+        Detail lengkap kamar yang Anda tempati
+       </div>
+      </div>
+      <div class="card-body">
+       <div class="room-details-grid">
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Nama Kamar
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo $data['nama_kamar']; ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Nomor Kamar
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo $data['nomor_kamar']; ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Harga Sewa
+         </div>
+         <div class="room-detail-value">
+          Rp <!--?php echo number_format($data['harga'], 0, ',', '.'); ?-->/bulan
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Ukuran
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo $data['ukuran']; ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Fasilitas
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo $data['fasilitas']; ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Status Pembayaran
+         </div>
+         <div class="badge <?php 
+                  echo $data['status_pembayaran'] == 'lunas' ? 'badge-success' : 
+                       ($data['status_pembayaran'] == 'belum_bayar' ? 'badge-warning' : 'badge-error'); 
+                ?>"><!--?php 
+                    echo $data['status_pembayaran'] == 'lunas' ? '✓ Lunas' : 
+                         ($data['status_pembayaran'] == 'belum_bayar' ? '⏳ Belum Bayar' : '⚠️ Terlambat'); 
+                  ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Tanggal Masuk
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo date('d M Y', strtotime($data['tanggal_masuk'])); ?-->
+         </div>
+        </div>
+        <div class="room-detail-item">
+         <div class="room-detail-label">
+          Kontrak Hingga
+         </div>
+         <div class="room-detail-value">
+          <!--?php echo date('d M Y', strtotime($data['tanggal_keluar'])); ?-->
+         </div>
+        </div>
+       </div>
+       <div class="quick-actions"><a href="pembayaran.php" class="btn btn-primary">💳 Bayar Sekarang</a> <a href="komplain.php" class="btn btn-outline">📝 Buat Komplain</a> <a href="perpanjang_kontrak.php" class="btn btn-success">📄 Perpanjang Kontrak</a>
+       </div>
+      </div>
+     </div><!-- Payment History Table -->
+     <div class="table-card">
+      <div class="table-header">
+       <h3 class="table-title">📊 Riwayat Pembayaran Terakhir</h3><a href="riwayat_pembayaran.php" class="btn btn-outline btn-sm">Lihat Semua</a>
+      </div>
+      <div class="table-wrapper">
+       <table>
+        <thead>
+         <tr>
+          <th>Tanggal Bayar</th>
+          <th>Bulan</th>
+          <th>Jumlah</th>
+          <th>Metode</th>
+          <th>Status</th>
+         </tr>
+        </thead>
+        <tbody><!--?php
+                $payments = [
+                  ['tanggal' =--> '2024-12-05', 'bulan' =&gt; 'Desember 2024', 'jumlah' =&gt; 1200000, 'metode' =&gt; 'Transfer Bank'], ['tanggal' =&gt; '2024-11-03', 'bulan' =&gt; 'November 2024', 'jumlah' =&gt; 1200000, 'metode' =&gt; 'Transfer Bank'], ['tanggal' =&gt; '2024-10-02', 'bulan' =&gt; 'Oktober 2024', 'jumlah' =&gt; 1200000, 'metode' =&gt; 'Cash'], ]; if(count($payments) &gt; 0) { foreach($payments as $p) { echo "
+         <tr>
+          "; echo "
+          <td>" . date('d M Y', strtotime($p['tanggal'])) . "</td>"; echo "
+          <td>" . $p['bulan'] . "</td>"; echo "
+          <td>Rp " . number_format($p['jumlah'], 0, ',', '.') . "</td>"; echo "
+          <td>" . $p['metode'] . "</td>"; echo "
+          <td><span class="badge badge-success">✓ Lunas</span></td>"; echo "
+         </tr>"; } } else { echo "
+         <tr>
+          <td colspan="5">
+           <div class="empty-state">
+            "; echo "
+            <div class="empty-state-icon">
+             📭
+            </div>"; echo "
+            <p>Belum ada riwayat pembayaran</p>"; echo "
+           </div></td>
+         </tr>"; } ?&gt;
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </main>
+   </div>
+  </div><!-- Logout Modal -->
+  <div class="modal-overlay" id="logoutModal">
+   <div class="modal">
+    <div class="modal-header">
+     <div class="modal-icon">
+      🚪
+     </div>
+     <h3 class="modal-title">Konfirmasi Keluar</h3>
+     <p class="modal-text">Apakah Anda yakin ingin keluar dari akun Anda?</p>
+    </div>
+    <div class="modal-actions"><button class="btn btn-outline" onclick="hideLogoutModal()">Batal</button> <button class="btn btn-primary" onclick="logout()">Ya, Keluar</button>
+    </div>
+   </div>
+  </div>
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    function toggleDropdown() {
+      document.getElementById('dropdownMenu').classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('dropdownMenu');
+      const profile = document.querySelector('.user-profile');
+      
+      if (!profile.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    function showLogoutModal() {
+      document.getElementById('logoutModal').classList.add('active');
+    }
+
+    function hideLogoutModal() {
+      document.getElementById('logoutModal').classList.remove('active');
+    }
+
+    function logout() {
+      window.location.href = 'login.php';
+    }
+
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.mobile-menu-toggle');
+      
+      if (window.innerWidth <= 968 && 
+          !sidebar.contains(event.target) && 
+          !toggle.contains(event.target) &&
+          sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+      }
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a08f7f5c3c4e791',t:'MTc2MzQ4NDY0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

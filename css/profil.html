@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - SIKOS</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100%;
+            background: #f8fafc;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: white;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .user-avatar-small {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0 0 2px 0;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Profile Header Card */
+        .profile-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .avatar-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            background: #16a34a;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .profile-room {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0 0 16px 0;
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-verified {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-duration {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37,99,235,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .info-card-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-card-icon {
+            font-size: 28px;
+        }
+
+        .info-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .edit-btn {
+            padding: 6px 14px;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 2px solid #bfdbfe;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: #dbeafe;
+            border-color: #2563eb;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .info-item-content {
+            flex: 1;
+        }
+
+        .info-item-label {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 6px 0;
+        }
+
+        .info-item-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .form-input:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+            margin: 0 0 4px 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Activity Timeline */
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .activity-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 4px 0;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #16a34a;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 24px;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container"><!-- Sidebar -->
+   <aside class="sidebar">
+    <div class="sidebar-header">
+     <div class="sidebar-logo"><span>🏠</span> <span>SIKOS</span>
+     </div>
+     <p class="sidebar-subtitle">Sistem Informasi Kos</p>
+    </div>
+    <nav class="sidebar-menu"><a href="#" class="menu-item" onclick="showToast('Dashboard', 'Kembali ke Dashboard', 'success'); return false;"> <span class="menu-icon">📊</span> <span>Dashboard</span> </a> <a href="#" class="menu-item" onclick="showToast('Pembayaran', 'Halaman Pembayaran', 'success'); return false;"> <span class="menu-icon">💰</span> <span>Pembayaran</span> </a> <a href="#" class="menu-item" onclick="showToast('Riwayat', 'Halaman Riwayat', 'success'); return false;"> <span class="menu-icon">📋</span> <span>Riwayat</span> </a> <a href="#" class="menu-item" onclick="showToast('Komplain', 'Halaman Komplain', 'success'); return false;"> <span class="menu-icon">📝</span> <span>Komplain</span> </a> <a href="#" class="menu-item" onclick="showToast('Info Kamar', 'Halaman Info Kamar', 'success'); return false;"> <span class="menu-icon">🚪</span> <span>Info Kamar</span> </a> <a href="#" class="menu-item active" onclick="showToast('Profil', 'Anda sudah di halaman Profil', 'success'); return false;"> <span class="menu-icon">👤</span> <span>Profil</span> </a> <a href="#" class="menu-item" onclick="showToast('Pengaturan', 'Fitur Pengaturan akan segera tersedia', 'success'); return false;"> <span class="menu-icon">⚙️</span> <span>Pengaturan</span> </a>
+    </nav>
+    <div class="sidebar-footer">
+     <div class="user-profile">
+      <div class="user-avatar-small">
+       👨
+      </div>
+      <div class="user-info">
+       <p class="user-name" id="sidebar-name">Ahmad Rizki</p>
+       <p class="user-role">Penghuni Kamar A12</p>
+      </div>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="main-content"><!-- Page Header -->
+    <div class="page-header">
+     <h1 class="page-title" id="page-title">👤 Profil Saya</h1>
+     <p class="page-subtitle" id="page-subtitle">Kelola informasi pribadi dan pengaturan akun Anda</p>
+    </div><!-- Profile Header -->
+    <div class="profile-header">
+     <div class="profile-avatar"><span>👨</span>
+      <div class="avatar-badge">
+       ✓
+      </div>
+     </div>
+     <div class="profile-info">
+      <h2 class="profile-name" id="profile-name">Ahmad Rizki</h2>
+      <p class="profile-room" id="profile-room">Penghuni Kamar A12 • Lantai 1</p>
+      <div class="profile-badges"><span class="badge badge-active"> <span>✅</span> <span>Status Aktif</span> </span> <span class="badge badge-verified"> <span>🔒</span> <span>Terverifikasi</span> </span> <span class="badge badge-duration"> <span>📅</span> <span>4 Bulan Tinggal</span> </span>
+      </div>
+     </div>
+     <div class="profile-actions"><button class="btn btn-primary" onclick="enableEditMode()"> <span>✏️</span> <span>Edit Profil</span> </button>
+     </div>
+    </div><!-- Stats -->
+    <div class="stats-grid">
+     <div class="stat-card">
+      <div class="stat-icon">
+       💰
+      </div>
+      <p class="stat-value">100%</p>
+      <p class="stat-label">Pembayaran Tepat Waktu</p>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       📝
+      </div>
+      <p class="stat-value">3</p>
+      <p class="stat-label">Komplain Dibuat</p>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       ⭐
+      </div>
+      <p class="stat-value">5.0</p>
+      <p class="stat-label">Rating Penghuni</p>
+     </div>
+     <div class="stat-card">
+      <div class="stat-icon">
+       📅
+      </div>
+      <p class="stat-value">120</p>
+      <p class="stat-label">Hari Tinggal</p>
+     </div>
+    </div><!-- Info Grid -->
+    <div class="info-grid"><!-- Personal Info -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">📋</span>
+        <h3 class="info-card-title">Informasi Pribadi</h3>
+       </div>
+      </div>
+      <form id="personal-form">
+       <div class="form-group"><label for="fullname" class="form-label">Nama Lengkap</label> <input type="text" id="fullname" class="form-input" value="Ahmad Rizki" disabled>
+       </div>
+       <div class="form-group"><label for="email" class="form-label">Email</label> <input type="email" id="email" class="form-input" value="ahmad.rizki@email.com" disabled>
+       </div>
+       <div class="form-group"><label for="phone" class="form-label">No. Telepon</label> <input type="tel" id="phone" class="form-input" value="0812-3456-7890" disabled>
+       </div>
+       <div class="form-group"><label for="birthdate" class="form-label">Tanggal Lahir</label> <input type="text" id="birthdate" class="form-input" value="15 Maret 1998" disabled>
+       </div>
+       <div class="form-actions" id="personal-actions" style="display: none;"><button type="button" class="btn btn-primary" onclick="savePersonalInfo()"> <span>💾</span> <span>Simpan</span> </button> <button type="button" class="btn btn-secondary" onclick="cancelEdit()"> <span>❌</span> <span>Batal</span> </button>
+       </div>
+      </form>
+     </div><!-- Contact Info -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">📍</span>
+        <h3 class="info-card-title">Kontak &amp; Alamat</h3>
+       </div>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">🏠</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Alamat Asal</p>
+         <p class="info-item-value">Jl. Merdeka No. 123, Bandung</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">👨‍👩‍👦</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Kontak Darurat</p>
+         <p class="info-item-value">Ibu Siti (0821-9876-5432)</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">💼</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Pekerjaan/Kuliah</p>
+         <p class="info-item-value">Mahasiswa IT Telkom</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">🆔</span>
+        <div class="info-item-content">
+         <p class="info-item-label">No. KTP</p>
+         <p class="info-item-value">3273••••••••5678</p>
+        </div></li>
+      </ul>
+     </div><!-- Room Info -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">🚪</span>
+        <h3 class="info-card-title">Informasi Hunian</h3>
+       </div>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">🏠</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Nomor Kamar</p>
+         <p class="info-item-value">A12 (Lantai 1)</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">📅</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Tanggal Masuk</p>
+         <p class="info-item-value">1 Agustus 2024</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">⏰</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Durasi Kontrak</p>
+         <p class="info-item-value">12 Bulan</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">💰</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Tarif Bulanan</p>
+         <p class="info-item-value">Rp 1.200.000</p>
+        </div></li>
+      </ul>
+     </div><!-- Activity Log -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">📊</span>
+        <h3 class="info-card-title">Aktivitas Terakhir</h3>
+       </div>
+      </div>
+      <div class="activity-item"><span class="activity-icon">💰</span>
+       <div class="activity-content">
+        <p class="activity-title">Pembayaran sewa bulan Desember</p>
+        <p class="activity-time">2 hari yang lalu</p>
+       </div>
+      </div>
+      <div class="activity-item"><span class="activity-icon">📝</span>
+       <div class="activity-content">
+        <p class="activity-title">Membuat komplain AC tidak dingin</p>
+        <p class="activity-time">4 hari yang lalu</p>
+       </div>
+      </div>
+      <div class="activity-item"><span class="activity-icon">🔐</span>
+       <div class="activity-content">
+        <p class="activity-title">Login dari Chrome (Windows)</p>
+        <p class="activity-time">Hari ini, 08:30</p>
+       </div>
+      </div>
+      <div class="activity-item"><span class="activity-icon">✅</span>
+       <div class="activity-content">
+        <p class="activity-title">Komplain kamar mandi selesai</p>
+        <p class="activity-time">1 minggu yang lalu</p>
+       </div>
+      </div>
+     </div><!-- Security Settings -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">🔒</span>
+        <h3 class="info-card-title">Keamanan Akun</h3>
+       </div>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">🔑</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Password</p>
+         <p class="info-item-value">••••••••</p>
+        </div></li>
+      </ul>
+      <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;"><button class="btn btn-secondary" style="width: 100%;" onclick="showToast('Ubah Password', 'Fitur ubah password akan segera tersedia', 'success')"> <span>🔐</span> <span>Ubah Password</span> </button> <button class="btn btn-secondary" style="width: 100%;" onclick="showToast('Verifikasi Email', 'Email sudah terverifikasi', 'success')"> <span>✉️</span> <span>Verifikasi Email</span> </button>
+      </div>
+     </div><!-- Documents -->
+     <div class="info-card">
+      <div class="info-card-header">
+       <div class="info-card-title-wrap"><span class="info-card-icon">📄</span>
+        <h3 class="info-card-title">Dokumen</h3>
+       </div>
+      </div>
+      <ul class="info-list">
+       <li class="info-item"><span class="info-item-icon">📑</span>
+        <div class="info-item-content">
+         <p class="info-item-label">KTP</p>
+         <p class="info-item-value">✅ Terverifikasi</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">📋</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Kontrak Sewa</p>
+         <p class="info-item-value">✅ Aktif s/d 31 Jul 2025</p>
+        </div></li>
+       <li class="info-item"><span class="info-item-icon">💼</span>
+        <div class="info-item-content">
+         <p class="info-item-label">Kartu Mahasiswa</p>
+         <p class="info-item-value">✅ Terverifikasi</p>
+        </div></li>
+      </ul>
+      <div style="margin-top: 20px;"><button class="btn btn-secondary" style="width: 100%;" onclick="showToast('Dokumen', 'Membuka halaman dokumen...', 'success')"> <span>📂</span> <span>Lihat Semua Dokumen</span> </button>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="toast">
+   <div id="toast-icon" style="font-size: 32px;">
+    ✅
+   </div>
+   <div>
+    <p id="toast-title" style="margin: 0 0 4px 0; font-weight: 700; font-size: 15px;">Berhasil!</p>
+    <p id="toast-message" style="margin: 0; font-size: 13px;">Operasi berhasil dilakukan</p>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            page_title: "👤 Profil Saya",
+            page_subtitle: "Kelola informasi pribadi dan pengaturan akun Anda",
+            user_name: "Ahmad Rizki",
+            user_room: "Penghuni Kamar A12 • Lantai 1",
+            background_color: "#f8fafc",
+            sidebar_color: "#2563eb",
+            card_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#2563eb",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        function enableEditMode() {
+            document.getElementById('fullname').disabled = false;
+            document.getElementById('email').disabled = false;
+            document.getElementById('phone').disabled = false;
+            document.getElementById('birthdate').disabled = false;
+            document.getElementById('personal-actions').style.display = 'flex';
+            
+            showToast('Mode Edit', 'Silakan ubah informasi Anda', 'success');
+        }
+
+        function cancelEdit() {
+            document.getElementById('fullname').disabled = true;
+            document.getElementById('email').disabled = true;
+            document.getElementById('phone').disabled = true;
+            document.getElementById('birthdate').disabled = true;
+            document.getElementById('personal-actions').style.display = 'none';
+            
+            document.getElementById('fullname').value = 'Ahmad Rizki';
+            document.getElementById('email').value = 'ahmad.rizki@email.com';
+            document.getElementById('phone').value = '0812-3456-7890';
+            document.getElementById('birthdate').value = '15 Maret 1998';
+            
+            showToast('Dibatalkan', 'Perubahan dibatalkan', 'success');
+        }
+
+        function savePersonalInfo() {
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!fullname || !email || !phone) {
+                showToast('Gagal', 'Mohon isi semua field', 'error');
+                return;
+            }
+
+            document.getElementById('fullname').disabled = true;
+            document.getElementById('email').disabled = true;
+            document.getElementById('phone').disabled = true;
+            document.getElementById('birthdate').disabled = true;
+            document.getElementById('personal-actions').style.display = 'none';
+            
+            showToast('Berhasil Disimpan', 'Informasi profil Anda telah diperbarui', 'success');
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+
+            icon.textContent = type === 'error' ? '❌' : '✅';
+            toastTitle.style.color = type === 'error' ? '#991b1b' : '#166534';
+            toastMessage.style.color = type === 'error' ? '#dc2626' : '#15803d';
+            toast.style.borderLeftColor = type === 'error' ? '#dc2626' : '#16a34a';
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) {
+                pageTitle.textContent = config.page_title || defaultConfig.page_title;
+                pageTitle.style.fontSize = `${baseSize * 2}px`;
+            }
+
+            const pageSubtitle = document.getElementById('page-subtitle');
+            if (pageSubtitle) {
+                pageSubtitle.textContent = config.page_subtitle || defaultConfig.page_subtitle;
+                pageSubtitle.style.fontSize = `${baseSize}px`;
+            }
+
+            const profileName = document.getElementById('profile-name');
+            if (profileName) {
+                profileName.textContent = config.user_name || defaultConfig.user_name;
+                profileName.style.fontSize = `${baseSize * 1.75}px`;
+            }
+
+            const sidebarName = document.getElementById('sidebar-name');
+            if (sidebarName) {
+                sidebarName.textContent = config.user_name || defaultConfig.user_name;
+            }
+
+            const profileRoom = document.getElementById('profile-room');
+            if (profileRoom) {
+                profileRoom.textContent = config.user_room || defaultConfig.user_room;
+                profileRoom.style.fontSize = `${baseSize}px`;
+            }
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const sidebarColor = config.sidebar_color || defaultConfig.sidebar_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+
+            document.body.style.background = bgColor;
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.style.background = `linear-gradient(180deg, ${sidebarColor} 0%, ${adjustBrightness(sidebarColor, -20)} 100%)`;
+            }
+
+            document.querySelectorAll('.profile-header, .info-card, .stat-card').forEach(el => {
+                el.style.background = cardColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3, h4, p, span, button, input, label, li').forEach(el => {
+                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+        }
+
+        function adjustBrightness(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 +
+                (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.sidebar_color || defaultConfig.sidebar_color,
+                            set: (value) => {
+                                config.sidebar_color = value;
+                                window.elementSdk.setConfig({ sidebar_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                    ["user_name", config.user_name || defaultConfig.user_name],
+                    ["user_room", config.user_room || defaultConfig.user_room]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a03f2e932f5aa09',t:'MTc2MzQzMjAwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

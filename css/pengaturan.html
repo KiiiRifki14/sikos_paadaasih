@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan - SIKOS</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100%;
+            background: #f8fafc;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: white;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .user-avatar-small {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0 0 2px 0;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .section-icon {
+            font-size: 28px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Settings Item */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item-info {
+            flex: 1;
+        }
+
+        .settings-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 6px 0;
+        }
+
+        .settings-item-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background-color: #2563eb;
+        }
+
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(37,99,235,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(220,38,38,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        /* Select Dropdown */
+        .select-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .settings-select {
+            padding: 10px 40px 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .settings-select:hover {
+            border-color: #2563eb;
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        /* Alert Box */
+        .alert-box {
+            background: #fef2f2;
+            border: 2px solid #fecaca;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .alert-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #991b1b;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            color: #7f1d1d;
+            margin: 0 0 16px 0;
+            line-height: 1.5;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #1e40af;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #16a34a;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .settings-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .toggle-switch,
+            .select-wrapper,
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container"><!-- Sidebar -->
+   <aside class="sidebar">
+    <div class="sidebar-header">
+     <div class="sidebar-logo"><span>🏠</span> <span>SIKOS</span>
+     </div>
+     <p class="sidebar-subtitle">Sistem Informasi Kos</p>
+    </div>
+    <nav class="sidebar-menu"><a href="#" class="menu-item" onclick="showToast('Dashboard', 'Kembali ke Dashboard', 'success'); return false;"> <span class="menu-icon">📊</span> <span>Dashboard</span> </a> <a href="#" class="menu-item" onclick="showToast('Pembayaran', 'Halaman Pembayaran', 'success'); return false;"> <span class="menu-icon">💰</span> <span>Pembayaran</span> </a> <a href="#" class="menu-item" onclick="showToast('Riwayat', 'Halaman Riwayat', 'success'); return false;"> <span class="menu-icon">📋</span> <span>Riwayat</span> </a> <a href="#" class="menu-item" onclick="showToast('Komplain', 'Halaman Komplain', 'success'); return false;"> <span class="menu-icon">📝</span> <span>Komplain</span> </a> <a href="#" class="menu-item" onclick="showToast('Info Kamar', 'Halaman Info Kamar', 'success'); return false;"> <span class="menu-icon">🚪</span> <span>Info Kamar</span> </a> <a href="#" class="menu-item" onclick="showToast('Profil', 'Halaman Profil', 'success'); return false;"> <span class="menu-icon">👤</span> <span>Profil</span> </a> <a href="#" class="menu-item active" onclick="showToast('Pengaturan', 'Anda sudah di halaman Pengaturan', 'success'); return false;"> <span class="menu-icon">⚙️</span> <span>Pengaturan</span> </a>
+    </nav>
+    <div class="sidebar-footer">
+     <div class="user-profile">
+      <div class="user-avatar-small">
+       👨
+      </div>
+      <div class="user-info">
+       <p class="user-name" id="sidebar-name">Ahmad Rizki</p>
+       <p class="user-role">Penghuni Kamar A12</p>
+      </div>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="main-content"><!-- Page Header -->
+    <div class="page-header">
+     <h1 class="page-title" id="page-title">⚙️ Pengaturan</h1>
+     <p class="page-subtitle" id="page-subtitle">Kelola preferensi dan pengaturan sistem Anda</p>
+    </div><!-- Account Settings -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">👤</span>
+      <h2 class="section-title">Akun &amp; Keamanan</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Verifikasi Dua Faktor (2FA)</p>
+       <p class="settings-item-desc">Tambahkan lapisan keamanan ekstra untuk akun Anda</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-2fa" onchange="handleToggle('2FA', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Login dengan Biometrik</p>
+       <p class="settings-item-desc">Gunakan sidik jari atau Face ID untuk login cepat</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-biometric" onchange="handleToggle('Biometrik', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Ubah Password</p>
+       <p class="settings-item-desc">Terakhir diubah 2 bulan yang lalu</p>
+      </div><button class="btn btn-outline" onclick="showToast('Ubah Password', 'Membuka form ubah password...', 'success')"> <span>🔐</span> <span>Ubah</span> </button>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Kelola Sesi Login</p>
+       <p class="settings-item-desc">Lihat dan kelola perangkat yang login ke akun Anda</p>
+      </div><button class="btn btn-outline" onclick="showToast('Sesi Login', '2 perangkat aktif terdeteksi', 'success')"> <span>📱</span> <span>Lihat Sesi</span> </button>
+     </div>
+    </div><!-- Notification Settings -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">🔔</span>
+      <h2 class="section-title">Notifikasi</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Notifikasi Email</p>
+       <p class="settings-item-desc">Terima pembaruan penting via email</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-email" checked onchange="handleToggle('Email', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Notifikasi Push</p>
+       <p class="settings-item-desc">Terima notifikasi langsung di perangkat Anda</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-push" checked onchange="handleToggle('Push', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Pengingat Pembayaran</p>
+       <p class="settings-item-desc">Notifikasi H-3 sebelum tanggal jatuh tempo</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-payment" checked onchange="handleToggle('Pengingat Pembayaran', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Update Komplain</p>
+       <p class="settings-item-desc">Notifikasi saat komplain Anda ditanggapi atau selesai</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-complaint" checked onchange="handleToggle('Update Komplain', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Promosi &amp; Pengumuman</p>
+       <p class="settings-item-desc">Terima informasi event, promo, dan pengumuman kos</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-promo" onchange="handleToggle('Promosi', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+    </div><!-- Appearance Settings -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">🎨</span>
+      <h2 class="section-title">Tampilan &amp; Tema</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Mode Gelap</p>
+       <p class="settings-item-desc">Gunakan tema gelap untuk tampilan lebih nyaman di malam hari</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-darkmode" onchange="handleToggle('Mode Gelap', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Bahasa Aplikasi</p>
+       <p class="settings-item-desc">Pilih bahasa yang Anda inginkan</p>
+      </div>
+      <div class="select-wrapper"><select class="settings-select" onchange="handleLanguageChange(this.value)"> <option value="id">🇮🇩 Indonesia</option> <option value="en">🇬🇧 English</option> <option value="ja">🇯🇵 日本語</option> </select>
+      </div>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Zona Waktu</p>
+       <p class="settings-item-desc">Sesuaikan dengan zona waktu lokal Anda</p>
+      </div>
+      <div class="select-wrapper"><select class="settings-select" onchange="handleTimezoneChange(this.value)"> <option value="wib">WIB (Jakarta)</option> <option value="wita">WITA (Makassar)</option> <option value="wit">WIT (Jayapura)</option> </select>
+      </div>
+     </div>
+    </div><!-- Payment Settings -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">💳</span>
+      <h2 class="section-title">Pembayaran</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Auto-Payment</p>
+       <p class="settings-item-desc">Otomatis bayar sewa setiap bulan dari rekening terdaftar</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-autopay" onchange="handleToggle('Auto-Payment', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Metode Pembayaran Default</p>
+       <p class="settings-item-desc">Pilih metode pembayaran utama</p>
+      </div>
+      <div class="select-wrapper"><select class="settings-select" onchange="handlePaymentMethodChange(this.value)"> <option value="transfer">Transfer Bank</option> <option value="ewallet">E-Wallet</option> <option value="cash">Tunai</option> </select>
+      </div>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Kelola Rekening</p>
+       <p class="settings-item-desc">Tambah atau hapus rekening bank tersimpan</p>
+      </div><button class="btn btn-outline" onclick="showToast('Kelola Rekening', 'Membuka halaman rekening...', 'success')"> <span>🏦</span> <span>Kelola</span> </button>
+     </div>
+     <div class="info-box"><span class="info-icon">ℹ️</span>
+      <p class="info-text">Auto-payment akan memproses pembayaran H-1 sebelum tanggal jatuh tempo. Pastikan saldo mencukupi.</p>
+     </div>
+    </div><!-- Privacy Settings -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">🔒</span>
+      <h2 class="section-title">Privasi &amp; Data</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Profil Publik</p>
+       <p class="settings-item-desc">Izinkan penghuni lain melihat profil Anda</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-public" onchange="handleToggle('Profil Publik', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Tampilkan Status Online</p>
+       <p class="settings-item-desc">Biarkan orang lain tahu kapan Anda online</p>
+      </div><label class="toggle-switch"> <input type="checkbox" class="toggle-input" id="toggle-online" checked onchange="handleToggle('Status Online', this.checked)"> <span class="toggle-slider"></span> </label>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Unduh Data Saya</p>
+       <p class="settings-item-desc">Download semua data pribadi dan riwayat Anda</p>
+      </div><button class="btn btn-outline" onclick="showToast('Unduh Data', 'Menyiapkan file data Anda...', 'success')"> <span>📥</span> <span>Unduh</span> </button>
+     </div>
+    </div><!-- Danger Zone -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">⚠️</span>
+      <h2 class="section-title">Zona Berbahaya</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Logout dari Semua Perangkat</p>
+       <p class="settings-item-desc">Keluar dari semua perangkat yang login ke akun Anda</p>
+      </div><button class="btn btn-secondary" onclick="showLogoutConfirm()"> <span>🚪</span> <span>Logout Semua</span> </button>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Nonaktifkan Akun</p>
+       <p class="settings-item-desc">Sembunyikan akun sementara tanpa menghapus data</p>
+      </div><button class="btn btn-secondary" onclick="showToast('Nonaktifkan Akun', 'Hubungi pengelola untuk nonaktifkan akun', 'success')"> <span>⏸️</span> <span>Nonaktifkan</span> </button>
+     </div>
+     <div class="alert-box">
+      <p class="alert-title"><span>⚠️</span> <span>Hapus Akun Permanen</span></p>
+      <p class="alert-text">Menghapus akun akan menghapus semua data Anda secara permanen. Tindakan ini tidak dapat dibatalkan. Pastikan Anda sudah menyelesaikan semua kewajiban pembayaran.</p><button class="btn btn-danger" onclick="showDeleteConfirm()"> <span>🗑️</span> <span>Hapus Akun Permanen</span> </button>
+     </div>
+    </div><!-- App Info -->
+    <div class="settings-section">
+     <div class="section-header"><span class="section-icon">ℹ️</span>
+      <h2 class="section-title">Informasi Aplikasi</h2>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Versi Aplikasi</p>
+       <p class="settings-item-desc">SIKOS v2.1.0 (Build 2024.12)</p>
+      </div><button class="btn btn-outline" onclick="showToast('Update', 'Anda menggunakan versi terbaru', 'success')"> <span>🔄</span> <span>Cek Update</span> </button>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Bantuan &amp; Dukungan</p>
+       <p class="settings-item-desc">Hubungi tim support atau lihat panduan</p>
+      </div><button class="btn btn-outline" onclick="showToast('Bantuan', 'Membuka halaman bantuan...', 'success')"> <span>❓</span> <span>Buka</span> </button>
+     </div>
+     <div class="settings-item">
+      <div class="settings-item-info">
+       <p class="settings-item-title">Syarat &amp; Ketentuan</p>
+       <p class="settings-item-desc">Baca syarat penggunaan layanan</p>
+      </div><button class="btn btn-outline" onclick="showToast('Syarat &amp; Ketentuan', 'Membuka dokumen...', 'success')"> <span>📄</span> <span>Baca</span> </button>
+     </div>
+    </div>
+   </main>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="toast">
+   <div id="toast-icon" style="font-size: 32px;">
+    ✅
+   </div>
+   <div>
+    <p id="toast-title" style="margin: 0 0 4px 0; font-weight: 700; font-size: 15px;">Berhasil!</p>
+    <p id="toast-message" style="margin: 0; font-size: 13px;">Operasi berhasil dilakukan</p>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            page_title: "⚙️ Pengaturan",
+            page_subtitle: "Kelola preferensi dan pengaturan sistem Anda",
+            user_name: "Ahmad Rizki",
+            background_color: "#f8fafc",
+            sidebar_color: "#2563eb",
+            card_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#2563eb",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        function handleToggle(feature, isEnabled) {
+            const status = isEnabled ? 'diaktifkan' : 'dinonaktifkan';
+            showToast(feature, `${feature} telah ${status}`, 'success');
+        }
+
+        function handleLanguageChange(lang) {
+            const languages = {
+                'id': 'Bahasa Indonesia',
+                'en': 'English',
+                'ja': '日本語 (Japanese)'
+            };
+            showToast('Bahasa', `Bahasa diubah ke ${languages[lang]}`, 'success');
+        }
+
+        function handleTimezoneChange(tz) {
+            const timezones = {
+                'wib': 'WIB (Jakarta)',
+                'wita': 'WITA (Makassar)',
+                'wit': 'WIT (Jayapura)'
+            };
+            showToast('Zona Waktu', `Zona waktu diubah ke ${timezones[tz]}`, 'success');
+        }
+
+        function handlePaymentMethodChange(method) {
+            const methods = {
+                'transfer': 'Transfer Bank',
+                'ewallet': 'E-Wallet',
+                'cash': 'Tunai'
+            };
+            showToast('Metode Pembayaran', `Metode default: ${methods[method]}`, 'success');
+        }
+
+        function showLogoutConfirm() {
+            showToast('Logout', 'Fitur logout dari semua perangkat akan segera tersedia', 'success');
+        }
+
+        function showDeleteConfirm() {
+            showToast('Hapus Akun', 'Hubungi pengelola untuk menghapus akun Anda', 'success');
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+
+            icon.textContent = type === 'error' ? '❌' : '✅';
+            toastTitle.style.color = type === 'error' ? '#991b1b' : '#166534';
+            toastMessage.style.color = type === 'error' ? '#dc2626' : '#15803d';
+            toast.style.borderLeftColor = type === 'error' ? '#dc2626' : '#16a34a';
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) {
+                pageTitle.textContent = config.page_title || defaultConfig.page_title;
+                pageTitle.style.fontSize = `${baseSize * 2}px`;
+            }
+
+            const pageSubtitle = document.getElementById('page-subtitle');
+            if (pageSubtitle) {
+                pageSubtitle.textContent = config.page_subtitle || defaultConfig.page_subtitle;
+                pageSubtitle.style.fontSize = `${baseSize}px`;
+            }
+
+            const sidebarName = document.getElementById('sidebar-name');
+            if (sidebarName) {
+                sidebarName.textContent = config.user_name || defaultConfig.user_name;
+            }
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const sidebarColor = config.sidebar_color || defaultConfig.sidebar_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+
+            document.body.style.background = bgColor;
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.style.background = `linear-gradient(180deg, ${sidebarColor} 0%, ${adjustBrightness(sidebarColor, -20)} 100%)`;
+            }
+
+            document.querySelectorAll('.settings-section').forEach(el => {
+                el.style.background = cardColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3, p, span, button, input, label, select, option').forEach(el => {
+                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+        }
+
+        function adjustBrightness(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 +
+                (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.sidebar_color || defaultConfig.sidebar_color,
+                            set: (value) => {
+                                config.sidebar_color = value;
+                                window.elementSdk.setConfig({ sidebar_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                    ["user_name", config.user_name || defaultConfig.user_name]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a03f6e7c69bff78',t:'MTc2MzQzMjE3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

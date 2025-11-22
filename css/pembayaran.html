@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembayaran - SIKOS</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100%;
+            background: #f8fafc;
+        }
+        
+        html {
+            height: 100%;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100%;
+            min-height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left-color: white;
+            font-weight: 700;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+            margin: 0 0 2px 0;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Payment Cards */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .payment-card.unpaid {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, #fffbeb 0%, white 100%);
+        }
+
+        .payment-card.paid {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, white 100%);
+        }
+
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .payment-month {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .payment-status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-unpaid {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .payment-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2563eb;
+            margin: 16px 0;
+        }
+
+        .payment-details {
+            margin: 16px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #64748b;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .payment-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .btn-outline:hover {
+            background: #eff6ff;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .method-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .method-card:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .method-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .method-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 4px 0;
+        }
+
+        .method-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .modal-body {
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .info-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: white;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid #16a34a;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container"><!-- Sidebar -->
+   <aside class="sidebar">
+    <div class="sidebar-header">
+     <div class="sidebar-logo"><span>🏠</span> <span>SIKOS</span>
+     </div>
+     <p class="sidebar-subtitle">Sistem Informasi Kos</p>
+    </div>
+    <nav class="sidebar-menu"><a href="#" class="menu-item" onclick="showToast('Dashboard', 'Kembali ke Dashboard', 'success'); return false;"> <span class="menu-icon">📊</span> <span>Dashboard</span> </a> <a href="#" class="menu-item active" onclick="showToast('Pembayaran', 'Anda sudah di halaman Pembayaran', 'success'); return false;"> <span class="menu-icon">💰</span> <span>Pembayaran</span> </a> <a href="#" class="menu-item" onclick="showToast('Riwayat', 'Fitur Riwayat akan segera tersedia', 'success'); return false;"> <span class="menu-icon">📋</span> <span>Riwayat</span> </a> <a href="#" class="menu-item" onclick="showToast('Komplain', 'Fitur Komplain akan segera tersedia', 'success'); return false;"> <span class="menu-icon">📝</span> <span>Komplain</span> </a> <a href="#" class="menu-item" onclick="showToast('Kamar', 'Fitur Info Kamar akan segera tersedia', 'success'); return false;"> <span class="menu-icon">🚪</span> <span>Info Kamar</span> </a> <a href="#" class="menu-item" onclick="showToast('Profil', 'Fitur Profil akan segera tersedia', 'success'); return false;"> <span class="menu-icon">👤</span> <span>Profil</span> </a> <a href="#" class="menu-item" onclick="showToast('Pengaturan', 'Fitur Pengaturan akan segera tersedia', 'success'); return false;"> <span class="menu-icon">⚙️</span> <span>Pengaturan</span> </a>
+    </nav>
+    <div class="sidebar-footer">
+     <div class="user-profile">
+      <div class="user-avatar">
+       👨
+      </div>
+      <div class="user-info">
+       <p class="user-name" id="profile-name">Ahmad Rizki</p>
+       <p class="user-role">Penghuni Kamar A12</p>
+      </div>
+     </div>
+    </div>
+   </aside><!-- Main Content -->
+   <main class="main-content"><!-- Page Header -->
+    <div class="page-header">
+     <h1 class="page-title" id="page-title">💰 Pembayaran</h1>
+     <p class="page-subtitle" id="page-subtitle">Kelola pembayaran sewa kos Anda</p>
+    </div><!-- Payment Methods -->
+    <div class="payment-methods">
+     <h2 class="section-title"><span>💳</span> Metode Pembayaran</h2>
+     <div class="method-grid">
+      <div class="method-card" onclick="showToast('Transfer Bank', 'Fitur transfer bank akan segera tersedia', 'success')">
+       <div class="method-icon">
+        🏦
+       </div>
+       <p class="method-name">Transfer Bank</p>
+       <p class="method-desc">BCA, Mandiri, BNI, BRI</p>
+      </div>
+      <div class="method-card" onclick="showToast('E-Wallet', 'Fitur e-wallet akan segera tersedia', 'success')">
+       <div class="method-icon">
+        📱
+       </div>
+       <p class="method-name">E-Wallet</p>
+       <p class="method-desc">GoPay, OVO, Dana, ShopeePay</p>
+      </div>
+      <div class="method-card" onclick="showToast('QRIS', 'Fitur QRIS akan segera tersedia', 'success')">
+       <div class="method-icon">
+        📲
+       </div>
+       <p class="method-name">QRIS</p>
+       <p class="method-desc">Scan &amp; Bayar dengan QRIS</p>
+      </div>
+      <div class="method-card" onclick="showToast('Cash', 'Bayar langsung ke pengelola kos', 'success')">
+       <div class="method-icon">
+        💵
+       </div>
+       <p class="method-name">Tunai</p>
+       <p class="method-desc">Bayar langsung ke pengelola</p>
+      </div>
+     </div>
+    </div><!-- Payment Cards -->
+    <h2 class="section-title" style="margin-bottom: 20px;"><span>📅</span> Tagihan Bulanan</h2>
+    <div class="payment-grid"><!-- Unpaid Payment -->
+     <div class="payment-card unpaid">
+      <div class="payment-header">
+       <h3 class="payment-month">Desember 2024</h3><span class="payment-status status-unpaid">Belum Lunas</span>
+      </div>
+      <div class="payment-amount">
+       Rp 1.200.000
+      </div>
+      <div class="payment-details">
+       <div class="detail-row"><span class="detail-label">Kamar</span> <span class="detail-value">A12</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Periode</span> <span class="detail-value">1 - 31 Des 2024</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Jatuh Tempo</span> <span class="detail-value" style="color: #dc2626;">30 Des 2024 (15 hari lagi)</span>
+       </div>
+       <div class="detail-row" style="border-bottom: none;"><span class="detail-label">Status</span> <span class="detail-value" style="color: #dc2626;">⚠️ Menunggu Pembayaran</span>
+       </div>
+      </div><button class="payment-btn btn-primary" onclick="openPaymentModal('Desember 2024', 1200000, '30 Des 2024')"> <span>💳</span> <span>Bayar Sekarang</span> </button>
+     </div><!-- Paid Payment -->
+     <div class="payment-card paid">
+      <div class="payment-header">
+       <h3 class="payment-month">November 2024</h3><span class="payment-status status-paid">Lunas</span>
+      </div>
+      <div class="payment-amount" style="color: #10b981;">
+       Rp 1.200.000
+      </div>
+      <div class="payment-details">
+       <div class="detail-row"><span class="detail-label">Kamar</span> <span class="detail-value">A12</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Periode</span> <span class="detail-value">1 - 30 Nov 2024</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Dibayar</span> <span class="detail-value" style="color: #10b981;">28 Nov 2024</span>
+       </div>
+       <div class="detail-row" style="border-bottom: none;"><span class="detail-label">Metode</span> <span class="detail-value">🏦 Transfer Bank BCA</span>
+       </div>
+      </div><button class="payment-btn btn-success" onclick="showToast('Pembayaran Lunas', 'Pembayaran November sudah lunas', 'success')"> <span>✅</span> <span>Sudah Lunas</span> </button> <button class="payment-btn btn-outline" onclick="showToast('Download', 'Download bukti pembayaran akan segera tersedia', 'success')"> <span>📄</span> <span>Unduh Bukti</span> </button>
+     </div><!-- Paid Payment -->
+     <div class="payment-card paid">
+      <div class="payment-header">
+       <h3 class="payment-month">Oktober 2024</h3><span class="payment-status status-paid">Lunas</span>
+      </div>
+      <div class="payment-amount" style="color: #10b981;">
+       Rp 1.200.000
+      </div>
+      <div class="payment-details">
+       <div class="detail-row"><span class="detail-label">Kamar</span> <span class="detail-value">A12</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Periode</span> <span class="detail-value">1 - 31 Okt 2024</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Dibayar</span> <span class="detail-value" style="color: #10b981;">29 Okt 2024</span>
+       </div>
+       <div class="detail-row" style="border-bottom: none;"><span class="detail-label">Metode</span> <span class="detail-value">📱 GoPay</span>
+       </div>
+      </div><button class="payment-btn btn-success" onclick="showToast('Pembayaran Lunas', 'Pembayaran Oktober sudah lunas', 'success')"> <span>✅</span> <span>Sudah Lunas</span> </button> <button class="payment-btn btn-outline" onclick="showToast('Download', 'Download bukti pembayaran akan segera tersedia', 'success')"> <span>📄</span> <span>Unduh Bukti</span> </button>
+     </div><!-- Paid Payment -->
+     <div class="payment-card paid">
+      <div class="payment-header">
+       <h3 class="payment-month">September 2024</h3><span class="payment-status status-paid">Lunas</span>
+      </div>
+      <div class="payment-amount" style="color: #10b981;">
+       Rp 1.200.000
+      </div>
+      <div class="payment-details">
+       <div class="detail-row"><span class="detail-label">Kamar</span> <span class="detail-value">A12</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Periode</span> <span class="detail-value">1 - 30 Sep 2024</span>
+       </div>
+       <div class="detail-row"><span class="detail-label">Dibayar</span> <span class="detail-value" style="color: #10b981;">27 Sep 2024</span>
+       </div>
+       <div class="detail-row" style="border-bottom: none;"><span class="detail-label">Metode</span> <span class="detail-value">📲 QRIS</span>
+       </div>
+      </div><button class="payment-btn btn-success" onclick="showToast('Pembayaran Lunas', 'Pembayaran September sudah lunas', 'success')"> <span>✅</span> <span>Sudah Lunas</span> </button> <button class="payment-btn btn-outline" onclick="showToast('Download', 'Download bukti pembayaran akan segera tersedia', 'success')"> <span>📄</span> <span>Unduh Bukti</span> </button>
+     </div>
+    </div>
+   </main>
+  </div><!-- Payment Modal -->
+  <div id="payment-modal" class="modal">
+   <div class="modal-content">
+    <div class="modal-header">
+     <div class="modal-icon">
+      💳
+     </div>
+     <h3 class="modal-title">Konfirmasi Pembayaran</h3>
+     <p class="modal-subtitle">Periksa detail pembayaran Anda</p>
+    </div>
+    <div class="modal-body">
+     <div class="info-box">
+      <div class="info-row"><span class="info-label">Periode</span> <span class="info-value" id="modal-period">-</span>
+      </div>
+      <div class="info-row"><span class="info-label">Total Tagihan</span> <span class="info-value" id="modal-amount" style="color: #2563eb; font-size: 20px;">-</span>
+      </div>
+      <div class="info-row"><span class="info-label">Jatuh Tempo</span> <span class="info-value" id="modal-duedate">-</span>
+      </div>
+      <div class="info-row"><span class="info-label">Kamar</span> <span class="info-value">A12</span>
+      </div>
+     </div>
+     <div style="background: #eff6ff; border-radius: 12px; padding: 16px; margin-bottom: 16px; border-left: 4px solid #2563eb;">
+      <p style="margin: 0; font-size: 13px; color: #1e40af; line-height: 1.6;"><strong>📌 Catatan:</strong> Setelah melakukan pembayaran, mohon upload bukti transfer melalui tombol "Upload Bukti" atau konfirmasi ke admin.</p>
+     </div>
+    </div>
+    <div class="modal-actions"><button class="payment-btn btn-outline" onclick="closePaymentModal()" style="flex: 1;"> <span>❌</span> <span>Batal</span> </button> <button class="payment-btn btn-primary" onclick="processPayment()" style="flex: 1;"> <span>✅</span> <span>Lanjut Bayar</span> </button>
+    </div>
+   </div>
+  </div><!-- Toast Notification -->
+  <div id="toast" class="toast">
+   <div id="toast-icon" style="font-size: 32px;">
+    ✅
+   </div>
+   <div>
+    <p id="toast-title" style="margin: 0 0 4px 0; font-weight: 700; font-size: 15px;">Berhasil!</p>
+    <p id="toast-message" style="margin: 0; font-size: 13px;">Operasi berhasil dilakukan</p>
+   </div>
+  </div>
+  <script>
+        const defaultConfig = {
+            page_title: "💰 Pembayaran",
+            page_subtitle: "Kelola pembayaran sewa kos Anda",
+            user_name: "Ahmad Rizki",
+            background_color: "#f8fafc",
+            sidebar_color: "#2563eb",
+            card_color: "#ffffff",
+            text_color: "#1e293b",
+            primary_action_color: "#2563eb",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        function openPaymentModal(period, amount, dueDate) {
+            document.getElementById('modal-period').textContent = period;
+            document.getElementById('modal-amount').textContent = formatRupiah(amount);
+            document.getElementById('modal-duedate').textContent = dueDate;
+            document.getElementById('payment-modal').classList.add('show');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('payment-modal').classList.remove('show');
+        }
+
+        function processPayment() {
+            closePaymentModal();
+            showToast('Proses Pembayaran', 'Halaman metode pembayaran akan segera muncul', 'success');
+            
+            setTimeout(() => {
+                showToast('Demo Mode', 'Fitur pembayaran lengkap akan tersedia di versi production', 'success');
+            }, 2000);
+        }
+
+        function formatRupiah(amount) {
+            return 'Rp ' + amount.toLocaleString('id-ID');
+        }
+
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+
+            icon.textContent = '✅';
+            toastTitle.style.color = '#166534';
+            toastMessage.style.color = '#15803d';
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function onConfigChange(config) {
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const baseFontStack = 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) {
+                pageTitle.textContent = config.page_title || defaultConfig.page_title;
+                pageTitle.style.fontSize = `${baseSize * 2}px`;
+            }
+
+            const pageSubtitle = document.getElementById('page-subtitle');
+            if (pageSubtitle) {
+                pageSubtitle.textContent = config.page_subtitle || defaultConfig.page_subtitle;
+                pageSubtitle.style.fontSize = `${baseSize}px`;
+            }
+
+            const profileName = document.getElementById('profile-name');
+            if (profileName) {
+                profileName.textContent = config.user_name || defaultConfig.user_name;
+            }
+
+            const bgColor = config.background_color || defaultConfig.background_color;
+            const sidebarColor = config.sidebar_color || defaultConfig.sidebar_color;
+            const cardColor = config.card_color || defaultConfig.card_color;
+
+            document.body.style.background = bgColor;
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.style.background = `linear-gradient(180deg, ${sidebarColor} 0%, ${adjustBrightness(sidebarColor, -20)} 100%)`;
+            }
+
+            document.querySelectorAll('.payment-methods, .modal-content').forEach(el => {
+                el.style.background = cardColor;
+            });
+
+            document.querySelectorAll('h1, h2, h3, p, span, button').forEach(el => {
+                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
+            });
+        }
+
+        function adjustBrightness(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 +
+                (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.sidebar_color || defaultConfig.sidebar_color,
+                            set: (value) => {
+                                config.sidebar_color = value;
+                                window.elementSdk.setConfig({ sidebar_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                            set: (value) => {
+                                config.primary_action_color = value;
+                                window.elementSdk.setConfig({ primary_action_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["page_title", config.page_title || defaultConfig.page_title],
+                    ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+                    ["user_name", config.user_name || defaultConfig.user_name]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a03e35d23f07d69',t:'MTc2MzQzMTM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

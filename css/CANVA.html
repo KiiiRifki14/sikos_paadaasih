@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIKOS Paadaasih - High-Fidelity Mockup &amp; Component Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet">
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Brand Colors */
+      --primary: #0b5ed7;
+      --primary-hover: #0a52c1;
+      --accent: #0dcaf0;
+      --accent-hover: #0bb5d6;
+      --background: #F8FAFC;
+      --text-primary: #0f1724;
+      --text-secondary: #64748b;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --white: #ffffff;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      
+      /* Typography */
+      --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-body: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      
+      /* Spacing */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+      --spacing-3xl: 64px;
+      
+      /* Border Radius */
+      --radius-card: 8px;
+      --radius-button: 12px;
+      --radius-input: 8px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Navigation Tabs */
+    .mockup-nav {
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      border-bottom: 2px solid var(--gray-200);
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+      display: flex;
+      gap: var(--spacing-sm);
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tab:hover {
+      color: var(--primary);
+      background: var(--gray-100);
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Artboard Container */
+    .artboard-container {
+      display: none;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--spacing-2xl) var(--spacing-lg);
+    }
+
+    .artboard-container.active {
+      display: block;
+    }
+
+    .artboard-title {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .artboard-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      height: 600px;
+      background: linear-gradient(135deg, rgba(11, 94, 215, 0.9) 0%, rgba(13, 202, 240, 0.8) 100%),
+                  url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23cbd5e1" width="1200" height="600"/><g opacity="0.1"><circle cx="200" cy="150" r="100" fill="%230b5ed7"/><circle cx="800" cy="400" r="150" fill="%230dcaf0"/><circle cx="1000" cy="200" r="80" fill="%230b5ed7"/></g></svg>');
+      background-size: cover;
+      background-position: center;
+      border-radius: var(--radius-card);
+      margin-bottom: var(--spacing-2xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      text-align: center;
+      color: var(--white);
+      max-width: 800px;
+      padding: var(--spacing-xl);
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: 56px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      margin-bottom: var(--spacing-xl);
+      opacity: 0.95;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 14px 28px;
+      border-radius: var(--radius-button);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-100);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--gray-300);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--gray-100);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Search & Filters */
+    .search-section {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .search-title {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .form-label {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .form-input,
+    .form-select {
+      padding: 12px 16px;
+      border: 2px solid var(--gray-300);
+      border-radius: var(--radius-input);
+      font-family: var(--font-body);
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: var(--white);
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.1);
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 8px 16px;
+      background: var(--gray-100);
+      border: 2px solid transparent;
+      border-radius: 24px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .chip:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    /* Room Cards Grid */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .room-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .room-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .room-image {
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-200) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+    }
+
+    .room-badge {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-available {
+      background: var(--success);
+      color: var(--white);
+    }
+
+    .badge-occupied {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    .room-content {
+      padding: var(--spacing-lg);
+    }
+
+    .room-name {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .room-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .room-price-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .room-features {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      flex-wrap: wrap;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Features Section */
+    .features-section {
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .feature-card {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 56px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .feature-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--text-primary);
+      color: var(--white);
+      padding: var(--spacing-2xl) var(--spacing-lg);
+      border-radius: var(--radius-card);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .footer-section h3 {
+      font-family: var(--font-heading);
+      font-size: 18px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .footer-link {
+      display: block;
+      color: var(--gray-300);
+      text-decoration: none;
+      margin-bottom: var(--spacing-sm);
+      transition: color 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    /* Dashboard Layout */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--spacing-lg);
+      min-height: 600px;
+    }
+
+    .sidebar {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .sidebar-header {
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .sidebar-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .sidebar-link {
+      padding: 12px 16px;
+      border-radius: var(--radius-input);
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .sidebar-link:hover {
+      background: var(--gray-100);
+      color: var(--primary);
+    }
+
+    .sidebar-link.active {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .dashboard-main {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .dashboard-title {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: var(--white);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+
+    .data-table th {
+      background: var(--gray-100);
+      padding: var(--spacing-md);
+      text-align: left;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .data-table td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .data-table tr:hover {
+      background: var(--gray-100);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: var(--spacing-lg);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-xl);
+      max-width: 500px;
+      width: 100%;
+      box-shadow: var(--shadow-xl);
+      max-height: 90%;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--gray-100);
+      color: var(--text-primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: flex-end;
+      margin-top: var(--spacing-lg);
+    }
+
+    /* Component Library */
+    .component-grid {
+      display: grid;
+      gap: var(--spacing-2xl);
+    }
+
+    .component-section {
+      background: var(--white);
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-md);
+    }
+
+    .component-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .component-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: var(--spacing-lg);
+      right: var(--spacing-lg);
+      background: var(--white);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-xl);
+      display: none;
+      align-items: center;
+      gap: var(--spacing-md);
+      z-index: 3000;
+      border-left: 4px solid var(--success);
+    }
+
+    .toast.active {
+      display: flex;
+    }
+
+    .toast.error {
+      border-left-color: var(--danger);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+      }
+
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 60px;
+      }
+
+      .search-form {
+        grid-template-columns: 1fr;
+      }
+
+      .room-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s ease-in-out infinite;
+      border-radius: var(--radius-input);
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-text {
+      height: 16px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .skeleton-title {
+      height: 24px;
+      width: 60%;
+      margin-bottom: var(--spacing-md);
+    }
+
+    /* Style Guide */
+    .color-palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .color-swatch {
+      height: 120px;
+      border-radius: var(--radius-card);
+      display: flex;
+      align-items: flex-end;
+      padding: var(--spacing-md);
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+    }
+
+    .typography-sample {
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      background: var(--gray-100);
+      border-radius: var(--radius-card);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Navigation -->
+  <nav class="mockup-nav">
+   <div class="nav-container"><button class="nav-tab active" data-tab="landing">Landing Page</button> <button class="nav-tab" data-tab="detail">Detail Kamar</button> <button class="nav-tab" data-tab="login">Login/Register</button> <button class="nav-tab" data-tab="dashboard-user">Dashboard Penghuni</button> <button class="nav-tab" data-tab="dashboard-owner">Dashboard Owner</button> <button class="nav-tab" data-tab="components">Component Library</button> <button class="nav-tab" data-tab="styleguide">Style Guide</button>
+   </div>
+  </nav><!-- Landing Page Artboard -->
+  <div class="artboard-container active" id="landing">
+   <h1 class="artboard-title">Landing Page (Publik)</h1>
+   <p class="artboard-desc">Halaman utama untuk calon penghuni mencari dan melihat kamar kos</p><!-- Hero Section -->
+   <section class="hero-section">
+    <div class="hero-content">
+     <h1 class="hero-title" id="hero-title">Temukan Kos Impian Anda</h1>
+     <p class="hero-subtitle" id="hero-subtitle">Kos nyaman, aman, dan strategis untuk mahasiswa dan profesional</p>
+     <div class="hero-cta"><button class="btn btn-primary" id="cta-primary"> <span>🏠</span> <span>Lihat Kamar</span> </button> <button class="btn btn-secondary" id="cta-secondary"> <span>🔐</span> <span>Login</span> </button>
+     </div>
+    </div>
+   </section><!-- Search & Filters -->
+   <section class="search-section">
+    <h2 class="search-title">Cari Kamar Sesuai Kebutuhan</h2>
+    <form class="search-form" onsubmit="event.preventDefault();">
+     <div class="form-group"><label class="form-label" for="search-keyword">Kata Kunci</label> <input type="text" id="search-keyword" class="form-input" placeholder="Cari tipe kamar...">
+     </div>
+     <div class="form-group"><label class="form-label" for="search-type">Tipe Kamar</label> <select id="search-type" class="form-select"> <option>Semua Tipe</option> <option>Standar</option> <option>Deluxe</option> <option>Premium</option> </select>
+     </div>
+     <div class="form-group"><label class="form-label" for="search-price">Rentang Harga</label> <select id="search-price" class="form-select"> <option>Semua Harga</option> <option>&lt; 1 Juta</option> <option>1-2 Juta</option> <option>&gt; 2 Juta</option> </select>
+     </div>
+     <div class="form-group"><label class="form-label">Fasilitas</label>
+      <div class="filter-chips"><span class="chip">Wi-Fi</span> <span class="chip">AC</span> <span class="chip">Parkir</span> <span class="chip">Laundry</span>
+      </div>
+     </div>
+    </form><button class="btn btn-primary">🔍 Cari Kamar</button>
+   </section><!-- Room Listing -->
+   <h2 class="section-title">Kamar Tersedia</h2>
+   <div class="room-grid">
+    <div class="room-card">
+     <div class="room-image">
+      🛏️ <span class="room-badge badge-available">Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Standar A</h3>
+      <div class="room-price">
+       Rp 850.000 <span class="room-price-label">/bulan</span>
+      </div>
+      <div class="room-features"><span class="feature-item">📏 3x4 meter</span> <span class="feature-item">🛏️ Kasur</span> <span class="feature-item">🚿 K. Mandi</span>
+      </div><button class="btn btn-primary" style="width: 100%;">Lihat Detail</button>
+     </div>
+    </div>
+    <div class="room-card">
+     <div class="room-image">
+      🏠 <span class="room-badge badge-available">Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Deluxe B</h3>
+      <div class="room-price">
+       Rp 1.200.000 <span class="room-price-label">/bulan</span>
+      </div>
+      <div class="room-features"><span class="feature-item">📏 4x5 meter</span> <span class="feature-item">❄️ AC</span> <span class="feature-item">📶 Wi-Fi</span>
+      </div><button class="btn btn-primary" style="width: 100%;">Lihat Detail</button>
+     </div>
+    </div>
+    <div class="room-card">
+     <div class="room-image">
+      ⭐ <span class="room-badge badge-occupied">Terisi</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Premium C</h3>
+      <div class="room-price">
+       Rp 1.800.000 <span class="room-price-label">/bulan</span>
+      </div>
+      <div class="room-features"><span class="feature-item">📏 5x6 meter</span> <span class="feature-item">❄️ AC</span> <span class="feature-item">📺 TV</span>
+      </div><button class="btn btn-ghost" style="width: 100%;" disabled>Tidak Tersedia</button>
+     </div>
+    </div>
+   </div><!-- Features Section -->
+   <section class="features-section">
+    <h2 class="section-title">Keunggulan SIKOS Paadaasih</h2>
+    <div class="features-grid">
+     <div class="feature-card">
+      <div class="feature-icon">
+       🔒
+      </div>
+      <h3 class="feature-title">Keamanan Terjamin</h3>
+      <p class="feature-desc">CCTV 24 jam, sistem keamanan modern, dan penjaga kos yang siap membantu</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       📍
+      </div>
+      <h3 class="feature-title">Lokasi Strategis</h3>
+      <p class="feature-desc">Dekat kampus, pusat kota, transportasi umum, dan fasilitas umum lainnya</p>
+     </div>
+     <div class="feature-card">
+      <div class="feature-icon">
+       ✨
+      </div>
+      <h3 class="feature-title">Fasilitas Lengkap</h3>
+      <p class="feature-desc">Wi-Fi cepat, laundry, parkir luas, dapur bersama, dan ruang santai</p>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="footer">
+    <div class="footer-content">
+     <div class="footer-section">
+      <h3>SIKOS Paadaasih</h3>
+      <p style="color: var(--gray-300); margin-bottom: var(--spacing-md);">Sistem informasi pengelolaan kos terpadu untuk kemudahan Anda</p>
+      <p style="color: var(--gray-300);">📍 Jl. Paadaasih No. 123, Bandung<br>
+        📞 WhatsApp: 0812-3456-7890</p>
+     </div>
+     <div class="footer-section">
+      <h3>Link Penting</h3><a href="#" class="footer-link">Tentang Kami</a> <a href="#" class="footer-link">Syarat &amp; Ketentuan</a> <a href="#" class="footer-link">Kebijakan Privasi</a> <a href="#" class="footer-link">Kontak</a>
+     </div>
+     <div class="footer-section">
+      <h3>Untuk Penghuni</h3><a href="#" class="footer-link">Login</a> <a href="#" class="footer-link">Registrasi</a> <a href="#" class="footer-link">Cara Booking</a> <a href="#" class="footer-link">FAQ</a>
+     </div>
+    </div>
+   </footer>
+  </div><!-- Detail Kamar Artboard -->
+  <div class="artboard-container" id="detail">
+   <h1 class="artboard-title">Detail Kamar (Publik)</h1>
+   <p class="artboard-desc">Halaman detail lengkap untuk melihat informasi kamar sebelum booking</p>
+   <div style="background: var(--white); border-radius: var(--radius-card); padding: var(--spacing-xl); box-shadow: var(--shadow-md);"><!-- Image Gallery -->
+    <div style="background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-200) 100%); height: 400px; border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center; font-size: 72px; margin-bottom: var(--spacing-xl);">
+     🏠
+    </div><!-- Room Info -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-xl); margin-bottom: var(--spacing-xl);">
+     <div>
+      <h2 style="font-family: var(--font-heading); font-size: 32px; font-weight: 700; margin-bottom: var(--spacing-md);">Kamar Deluxe B</h2>
+      <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: var(--spacing-lg);">Kamar nyaman dengan fasilitas lengkap, cocok untuk mahasiswa atau pekerja profesional yang mencari tempat tinggal strategis dan aman.</p>
+      <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Fasilitas</h3>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+       <div class="feature-item">
+        ✅ AC
+       </div>
+       <div class="feature-item">
+        ✅ Wi-Fi
+       </div>
+       <div class="feature-item">
+        ✅ Kasur + Lemari
+       </div>
+       <div class="feature-item">
+        ✅ Kamar Mandi Dalam
+       </div>
+       <div class="feature-item">
+        ✅ Meja Belajar
+       </div>
+       <div class="feature-item">
+        ✅ Parkir Motor
+       </div>
+      </div>
+      <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Peraturan</h3>
+      <ul style="color: var(--text-secondary); padding-left: 20px;">
+       <li>Tidak boleh membawa hewan peliharaan</li>
+       <li>Tamu wajib lapor ke pengelola</li>
+       <li>Jam malam: 23.00 WIB</li>
+       <li>Dilarang merokok di dalam kamar</li>
+      </ul>
+     </div>
+     <div style="background: var(--gray-100); padding: var(--spacing-lg); border-radius: var(--radius-card);">
+      <div class="room-price" style="margin-bottom: var(--spacing-lg);">
+       Rp 1.200.000 <span class="room-price-label">/bulan</span>
+      </div><span class="room-badge badge-available" style="position: static; display: inline-block; margin-bottom: var(--spacing-lg);">Tersedia</span>
+      <div style="margin-bottom: var(--spacing-md);"><strong>Ukuran:</strong> 4x5 meter
+      </div>
+      <div style="margin-bottom: var(--spacing-lg);"><strong>Lantai:</strong> 2
+      </div><button class="btn btn-primary" style="width: 100%; margin-bottom: var(--spacing-sm);"> 📝 Booking Sekarang </button> <button class="btn btn-ghost" style="width: 100%;"> 💬 Hubungi Pemilik </button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Login/Register Artboard -->
+  <div class="artboard-container" id="login">
+   <h1 class="artboard-title">Login / Register</h1>
+   <p class="artboard-desc">Modal atau halaman untuk autentikasi pengguna</p>
+   <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-2xl); max-width: 1000px; margin: 0 auto;"><!-- Login Form -->
+    <div class="component-section">
+     <h2 class="component-title">Login</h2>
+     <form onsubmit="event.preventDefault();">
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="login-email">Email / No. HP</label> <input type="text" id="login-email" class="form-input" placeholder="Masukkan email atau nomor HP">
+      </div>
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="login-password">Password</label> <input type="password" id="login-password" class="form-input" placeholder="Masukkan password">
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);"><label style="display: flex; align-items: center; gap: var(--spacing-xs); cursor: pointer;"> <input type="checkbox" style="width: 16px; height: 16px;"> <span style="font-size: 14px;">Ingat saya</span> </label> <a href="#" style="font-size: 14px; color: var(--primary); text-decoration: none;">Lupa password?</a>
+      </div><button class="btn btn-primary" style="width: 100%; margin-bottom: var(--spacing-md);"> 🔐 Login </button>
+      <p style="text-align: center; font-size: 14px; color: var(--text-secondary);">Belum punya akun? <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">Daftar di sini</a></p>
+     </form>
+    </div><!-- Register Form -->
+    <div class="component-section">
+     <h2 class="component-title">Register</h2>
+     <form onsubmit="event.preventDefault();">
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="register-name">Nama Lengkap</label> <input type="text" id="register-name" class="form-input" placeholder="Masukkan nama lengkap">
+      </div>
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="register-email">Email</label> <input type="email" id="register-email" class="form-input" placeholder="Masukkan email">
+      </div>
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="register-phone">No. HP</label> <input type="tel" id="register-phone" class="form-input" placeholder="08xxxxxxxxxx">
+      </div>
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="register-password">Password</label> <input type="password" id="register-password" class="form-input" placeholder="Minimal 8 karakter">
+      </div>
+      <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="register-confirm">Konfirmasi Password</label> <input type="password" id="register-confirm" class="form-input" placeholder="Ulangi password">
+      </div>
+      <div style="margin-bottom: var(--spacing-lg);"><label style="display: flex; align-items: start; gap: var(--spacing-xs); cursor: pointer;"> <input type="checkbox" style="width: 16px; height: 16px; margin-top: 4px;"> <span style="font-size: 14px;">Saya setuju dengan <a href="#" style="color: var(--primary);">Syarat &amp; Ketentuan</a></span> </label>
+      </div><button class="btn btn-primary" style="width: 100%; margin-bottom: var(--spacing-md);"> 📝 Daftar Sekarang </button>
+      <p style="text-align: center; font-size: 14px; color: var(--text-secondary);">Sudah punya akun? <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">Login di sini</a></p>
+     </form>
+    </div>
+   </div>
+  </div><!-- Dashboard Penghuni Artboard -->
+  <div class="artboard-container" id="dashboard-user">
+   <h1 class="artboard-title">Dashboard Penghuni</h1>
+   <p class="artboard-desc">Panel kontrol untuk penghuni kos melihat kamar, tagihan, dan keluhan</p>
+   <div class="dashboard-layout"><!-- Sidebar -->
+    <aside class="sidebar">
+     <div class="sidebar-header">
+      <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+       <div style="width: 48px; height: 48px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 20px; font-weight: 700;">
+        A
+       </div>
+       <div>
+        <div style="font-weight: 600;">
+         Ahmad Saputra
+        </div>
+        <div style="font-size: 12px; color: var(--text-secondary);">
+         Penghuni
+        </div>
+       </div>
+      </div>
+     </div>
+     <nav class="sidebar-nav"><a href="#" class="sidebar-link active"> <span>📊</span> <span>Dashboard</span> </a> <a href="#" class="sidebar-link"> <span>🏠</span> <span>Kamar Saya</span> </a> <a href="#" class="sidebar-link"> <span>💳</span> <span>Tagihan Saya</span> </a> <a href="#" class="sidebar-link"> <span>📝</span> <span>Booking Baru</span> </a> <a href="#" class="sidebar-link"> <span>📢</span> <span>Pengumuman</span> </a> <a href="#" class="sidebar-link"> <span>🔧</span> <span>Keluhan</span> </a> <a href="#" class="sidebar-link"> <span>🚪</span> <span>Logout</span> </a>
+     </nav>
+    </aside><!-- Main Content -->
+    <main class="dashboard-main">
+     <div class="dashboard-header">
+      <h2 class="dashboard-title">Dashboard Penghuni</h2><button class="btn btn-ghost"> <span>🔔</span> <span>3 Notifikasi</span> </button>
+     </div><!-- Stats -->
+     <div class="stats-grid">
+      <div class="stat-card">
+       <div class="stat-label">
+        Status Kontrak
+       </div>
+       <div class="stat-value">
+        AKTIF
+       </div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);">
+       <div class="stat-label">
+        Tagihan Terbayar
+       </div>
+       <div class="stat-value">
+        12
+       </div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, var(--warning) 0%, #ffca2c 100%);">
+       <div class="stat-label">
+        Tagihan Pending
+       </div>
+       <div class="stat-value">
+        1
+       </div>
+      </div>
+     </div><!-- Recent Bills -->
+     <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Tagihan Terbaru</h3>
+     <table class="data-table" style="margin-bottom: var(--spacing-xl);">
+      <thead>
+       <tr>
+        <th>Bulan</th>
+        <th>Jumlah</th>
+        <th>Status</th>
+        <th>Aksi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>Januari 2025</td>
+        <td style="font-weight: 600;">Rp 1.200.000</td>
+        <td><span class="room-badge badge-available" style="position: static;">LUNAS</span></td>
+        <td><button class="btn btn-ghost" style="padding: 8px 16px; font-size: 14px;">📄 Lihat</button></td>
+       </tr>
+       <tr>
+        <td>Februari 2025</td>
+        <td style="font-weight: 600;">Rp 1.200.000</td>
+        <td><span style="background: var(--warning); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">PENDING</span></td>
+        <td><button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;">📤 Upload Bukti</button></td>
+       </tr>
+      </tbody>
+     </table><!-- Recent Announcements -->
+     <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Pengumuman Terbaru</h3>
+     <div style="background: var(--gray-100); padding: var(--spacing-lg); border-radius: var(--radius-card); border-left: 4px solid var(--accent);">
+      <h4 style="font-family: var(--font-heading); font-weight: 600; margin-bottom: var(--spacing-xs);">Jadwal Perbaikan Listrik</h4>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: var(--spacing-xs);">Akan ada pemadaman listrik sementara pada Sabtu, 15 Februari 2025 pukul 08.00-12.00 WIB untuk perbaikan instalasi.</p><span style="font-size: 12px; color: var(--text-secondary);">10 Februari 2025</span>
+     </div>
+    </main>
+   </div>
+  </div><!-- Dashboard Owner Artboard -->
+  <div class="artboard-container" id="dashboard-owner">
+   <h1 class="artboard-title">Dashboard Owner/Admin</h1>
+   <p class="artboard-desc">Panel kontrol untuk pemilik kos mengelola kamar, booking, dan pembayaran</p>
+   <div class="dashboard-layout"><!-- Sidebar -->
+    <aside class="sidebar">
+     <div class="sidebar-header">
+      <h2 class="sidebar-title">Admin Panel</h2>
+     </div>
+     <nav class="sidebar-nav"><a href="#" class="sidebar-link active"> <span>📊</span> <span>Dashboard</span> </a> <a href="#" class="sidebar-link"> <span>🏷️</span> <span>Kelola Tipe Kamar</span> </a> <a href="#" class="sidebar-link"> <span>🏠</span> <span>Kelola Kamar</span> </a> <a href="#" class="sidebar-link"> <span>📸</span> <span>Foto &amp; Gallery</span> </a> <a href="#" class="sidebar-link"> <span>📝</span> <span>Booking</span> </a> <a href="#" class="sidebar-link"> <span>💰</span> <span>Pembayaran</span> </a> <a href="#" class="sidebar-link"> <span>🧾</span> <span>Generate Tagihan</span> </a> <a href="#" class="sidebar-link"> <span>📈</span> <span>Laporan</span> </a> <a href="#" class="sidebar-link"> <span>📢</span> <span>Pengumuman</span> </a> <a href="#" class="sidebar-link"> <span>⚙️</span> <span>Pengaturan</span> </a>
+     </nav>
+    </aside><!-- Main Content -->
+    <main class="dashboard-main">
+     <div class="dashboard-header">
+      <h2 class="dashboard-title">Dashboard Owner</h2><button class="btn btn-primary"> <span>➕</span> <span>Tambah Kamar</span> </button>
+     </div><!-- Stats -->
+     <div class="stats-grid">
+      <div class="stat-card">
+       <div class="stat-label">
+        Occupancy Rate
+       </div>
+       <div class="stat-value">
+        85%
+       </div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, var(--success) 0%, #20c997 100%);">
+       <div class="stat-label">
+        Pendapatan Bulan Ini
+       </div>
+       <div class="stat-value">
+        24.5 Jt
+       </div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, var(--warning) 0%, #ffca2c 100%);">
+       <div class="stat-label">
+        Booking Pending
+       </div>
+       <div class="stat-value">
+        3
+       </div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, var(--danger) 0%, #e35d6a 100%);">
+       <div class="stat-label">
+        Verifikasi Bukti
+       </div>
+       <div class="stat-value">
+        5
+       </div>
+      </div>
+     </div><!-- Pending Bookings -->
+     <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Booking Pending</h3>
+     <table class="data-table" style="margin-bottom: var(--spacing-xl);">
+      <thead>
+       <tr>
+        <th>Nama</th>
+        <th>Kamar</th>
+        <th>Tanggal</th>
+        <th>Status</th>
+        <th>Aksi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td style="font-weight: 600;">Budi Santoso</td>
+        <td>Deluxe B</td>
+        <td>12 Feb 2025</td>
+        <td><span style="background: var(--warning); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">PENDING</span></td>
+        <td><button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px; margin-right: var(--spacing-xs);">✅ Terima</button> <button class="btn btn-danger" style="padding: 8px 16px; font-size: 14px;">❌ Tolak</button></td>
+       </tr>
+       <tr>
+        <td style="font-weight: 600;">Siti Rahma</td>
+        <td>Standar A</td>
+        <td>13 Feb 2025</td>
+        <td><span style="background: var(--warning); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">PENDING</span></td>
+        <td><button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px; margin-right: var(--spacing-xs);">✅ Terima</button> <button class="btn btn-danger" style="padding: 8px 16px; font-size: 14px;">❌ Tolak</button></td>
+       </tr>
+      </tbody>
+     </table><!-- Payment Verification -->
+     <h3 style="font-family: var(--font-heading); font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-md);">Verifikasi Pembayaran</h3>
+     <table class="data-table">
+      <thead>
+       <tr>
+        <th>Penghuni</th>
+        <th>Kamar</th>
+        <th>Bulan</th>
+        <th>Jumlah</th>
+        <th>Bukti</th>
+        <th>Aksi</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td style="font-weight: 600;">Ahmad Saputra</td>
+        <td>Deluxe B</td>
+        <td>Feb 2025</td>
+        <td style="font-weight: 600;">Rp 1.200.000</td>
+        <td><button class="btn btn-ghost" style="padding: 6px 12px; font-size: 13px;">🖼️ Lihat</button></td>
+        <td><button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px; margin-right: var(--spacing-xs);">✅ Verifikasi</button> <button class="btn btn-danger" style="padding: 8px 16px; font-size: 14px;">❌ Tolak</button></td>
+       </tr>
+      </tbody>
+     </table>
+    </main>
+   </div>
+  </div><!-- Component Library Artboard -->
+  <div class="artboard-container" id="components">
+   <h1 class="artboard-title">Component Library</h1>
+   <p class="artboard-desc">Komponen UI yang dapat digunakan kembali untuk development</p>
+   <div class="component-grid"><!-- Buttons -->
+    <div class="component-section">
+     <h2 class="component-title">Buttons</h2>
+     <div class="component-demo"><button class="btn btn-primary">Primary Button</button> <button class="btn btn-secondary">Secondary Button</button> <button class="btn btn-ghost">Ghost Button</button> <button class="btn btn-danger">Danger Button</button>
+     </div>
+    </div><!-- Form Elements -->
+    <div class="component-section">
+     <h2 class="component-title">Form Elements</h2>
+     <div style="display: grid; gap: var(--spacing-md); max-width: 500px;">
+      <div class="form-group"><label class="form-label" for="demo-input">Text Input</label> <input type="text" id="demo-input" class="form-input" placeholder="Placeholder text">
+      </div>
+      <div class="form-group"><label class="form-label" for="demo-select">Select Dropdown</label> <select id="demo-select" class="form-select"> <option>Option 1</option> <option>Option 2</option> <option>Option 3</option> </select>
+      </div>
+      <div class="form-group"><label class="form-label" for="demo-textarea">Textarea</label> <textarea id="demo-textarea" class="form-input" rows="4" placeholder="Enter text here..."></textarea>
+      </div>
+     </div>
+    </div><!-- Cards -->
+    <div class="component-section">
+     <h2 class="component-title">Cards</h2>
+     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md);">
+      <div class="room-card">
+       <div class="room-image">
+        🏠
+       </div>
+       <div class="room-content">
+        <h3 class="room-name">Room Card</h3>
+        <div class="room-price">
+         Rp 1.200.000 <span class="room-price-label">/bulan</span>
+        </div><button class="btn btn-primary" style="width: 100%;">Action</button>
+       </div>
+      </div>
+      <div class="stat-card">
+       <div class="stat-label">
+        Stat Card
+       </div>
+       <div class="stat-value">
+        123
+       </div>
+      </div>
+     </div>
+    </div><!-- Badges -->
+    <div class="component-section">
+     <h2 class="component-title">Badges</h2>
+     <div class="component-demo"><span class="room-badge badge-available" style="position: static;">Available</span> <span class="room-badge badge-occupied" style="position: static;">Occupied</span> <span style="background: var(--warning); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Pending</span> <span style="background: var(--success); color: var(--white); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Success</span>
+     </div>
+    </div><!-- Loading States -->
+    <div class="component-section">
+     <h2 class="component-title">Loading Skeleton</h2>
+     <div style="max-width: 400px;">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text" style="width: 70%;"></div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Style Guide Artboard -->
+  <div class="artboard-container" id="styleguide">
+   <h1 class="artboard-title">Style Guide</h1>
+   <p class="artboard-desc">Panduan desain lengkap dengan color palette, typography, dan spacing</p>
+   <div class="component-grid"><!-- Colors -->
+    <div class="component-section">
+     <h2 class="component-title">Color Palette</h2>
+     <div class="color-palette">
+      <div class="color-swatch" style="background: var(--primary);">
+       #0b5ed7<br>
+       Primary
+      </div>
+      <div class="color-swatch" style="background: var(--accent);">
+       #0dcaf0<br>
+       Accent
+      </div>
+      <div class="color-swatch" style="background: var(--success);">
+       #28a745<br>
+       Success
+      </div>
+      <div class="color-swatch" style="background: var(--danger);">
+       #dc3545<br>
+       Danger
+      </div>
+      <div class="color-swatch" style="background: var(--warning);">
+       #ffc107<br>
+       Warning
+      </div>
+      <div class="color-swatch" style="background: var(--text-primary); color: var(--white);">
+       #0f1724<br>
+       Text Primary
+      </div>
+      <div class="color-swatch" style="background: var(--text-secondary);">
+       #64748b<br>
+       Text Secondary
+      </div>
+      <div class="color-swatch" style="background: var(--background); color: var(--text-primary);">
+       #F8FAFC<br>
+       Background
+      </div>
+     </div>
+    </div><!-- Typography -->
+    <div class="component-section">
+     <h2 class="component-title">Typography</h2>
+     <div class="typography-sample">
+      <h1 style="font-family: var(--font-heading); font-size: 48px; font-weight: 700; margin-bottom: var(--spacing-sm);">Heading 1 - Inter 48px Bold</h1>
+      <h2 style="font-family: var(--font-heading); font-size: 36px; font-weight: 600; margin-bottom: var(--spacing-sm);">Heading 2 - Inter 36px SemiBold</h2>
+      <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 600; margin-bottom: var(--spacing-sm);">Heading 3 - Inter 24px SemiBold</h3>
+      <p style="font-family: var(--font-body); font-size: 16px; margin-bottom: var(--spacing-sm);">Body Text - Roboto 16px Regular</p>
+      <p style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary);">Small Text - Roboto 14px Regular</p>
+     </div>
+    </div><!-- Spacing -->
+    <div class="component-section">
+     <h2 class="component-title">Spacing Scale</h2>
+     <div style="display: grid; gap: var(--spacing-md);">
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-xs);"></div><span>XS - 4px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-sm);"></div><span>SM - 8px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-md);"></div><span>MD - 16px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-lg);"></div><span>LG - 24px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-xl);"></div><span>XL - 32px</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+       <div style="background: var(--primary); height: 40px; width: var(--spacing-2xl);"></div><span>2XL - 48px</span>
+      </div>
+     </div>
+    </div><!-- Border Radius -->
+    <div class="component-section">
+     <h2 class="component-title">Border Radius</h2>
+     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md);">
+      <div style="background: var(--gray-200); height: 100px; border-radius: var(--radius-input); display: flex; align-items: center; justify-content: center;">
+       Input<br>
+       8px
+      </div>
+      <div style="background: var(--gray-200); height: 100px; border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center;">
+       Card<br>
+       8px
+      </div>
+      <div style="background: var(--gray-200); height: 100px; border-radius: var(--radius-button); display: flex; align-items: center; justify-content: center;">
+       Button<br>
+       12px
+      </div>
+     </div>
+    </div><!-- Shadows -->
+    <div class="component-section">
+     <h2 class="component-title">Shadow Scale</h2>
+     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg);">
+      <div style="background: var(--white); height: 100px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-card);">
+       SM
+      </div>
+      <div style="background: var(--white); height: 100px; box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-card);">
+       MD
+      </div>
+      <div style="background: var(--white); height: 100px; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-card);">
+       LG
+      </div>
+      <div style="background: var(--white); height: 100px; box-shadow: var(--shadow-xl); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-card);">
+       XL
+      </div>
+     </div>
+    </div><!-- Grid System -->
+    <div class="component-section">
+     <h2 class="component-title">Grid System (12 Column)</h2>
+     <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--spacing-sm);">
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+      <div style="background: var(--primary); height: 40px; border-radius: var(--radius-input);"></div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Toast Notification (Hidden by default) -->
+  <div class="toast" id="toast"><span style="font-size: 20px;">✅</span> <span>Operasi berhasil!</span>
+  </div><!-- Modal Example (Hidden by default) -->
+  <div class="modal-overlay" id="modal">
+   <div class="modal">
+    <div class="modal-header">
+     <h3 class="modal-title">Upload Bukti Pembayaran</h3><button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <form onsubmit="event.preventDefault(); showToast();">
+     <div class="form-group" style="margin-bottom: var(--spacing-md);"><label class="form-label" for="upload-file">Pilih File</label> <input type="file" id="upload-file" class="form-input" accept="image/*">
+     </div>
+     <div class="form-group" style="margin-bottom: var(--spacing-lg);"><label class="form-label" for="upload-note">Catatan (Opsional)</label> <textarea id="upload-note" class="form-input" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
+     </div>
+     <div class="modal-actions"><button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button> <button type="submit" class="btn btn-primary">Upload</button>
+     </div>
+    </form>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      brand_name: "SIKOS Paadaasih",
+      hero_title: "Temukan Kos Impian Anda",
+      hero_subtitle: "Kos nyaman, aman, dan strategis untuk mahasiswa dan profesional",
+      cta_primary: "Lihat Kamar",
+      cta_secondary: "Login"
+    };
+
+    async function onConfigChange(config) {
+      const brandName = config.brand_name || defaultConfig.brand_name;
+      const heroTitle = config.hero_title || defaultConfig.hero_title;
+      const heroSubtitle = config.hero_subtitle || defaultConfig.hero_subtitle;
+      const ctaPrimary = config.cta_primary || defaultConfig.cta_primary;
+      const ctaSecondary = config.cta_secondary || defaultConfig.cta_secondary;
+
+      const heroTitleEl = document.getElementById('hero-title');
+      const heroSubtitleEl = document.getElementById('hero-subtitle');
+      const ctaPrimaryEl = document.getElementById('cta-primary');
+      const ctaSecondaryEl = document.getElementById('cta-secondary');
+
+      if (heroTitleEl) heroTitleEl.textContent = heroTitle;
+      if (heroSubtitleEl) heroSubtitleEl.textContent = heroSubtitle;
+      if (ctaPrimaryEl) {
+        const textSpan = ctaPrimaryEl.querySelector('span:last-child');
+        if (textSpan) textSpan.textContent = ctaPrimary;
+      }
+      if (ctaSecondaryEl) {
+        const textSpan = ctaSecondaryEl.querySelector('span:last-child');
+        if (textSpan) textSpan.textContent = ctaSecondary;
+      }
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["brand_name", config.brand_name || defaultConfig.brand_name],
+        ["hero_title", config.hero_title || defaultConfig.hero_title],
+        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+        ["cta_primary", config.cta_primary || defaultConfig.cta_primary],
+        ["cta_secondary", config.cta_secondary || defaultConfig.cta_secondary]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Tab Navigation
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const artboards = document.querySelectorAll('.artboard-container');
+
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetTab = tab.dataset.tab;
+        
+        navTabs.forEach(t => t.classList.remove('active'));
+        artboards.forEach(a => a.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(targetTab).classList.add('active');
+      });
+    });
+
+    // Modal Functions
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('active');
+      closeModal();
+      setTimeout(() => {
+        toast.classList.remove('active');
+      }, 3000);
+    }
+
+    document.getElementById('modal').addEventListener('click', (e) => {
+      if (e.target.id === 'modal') {
+        closeModal();
+      }
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a05a6f1c0b36d06',t:'MTc2MzQ0OTg2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

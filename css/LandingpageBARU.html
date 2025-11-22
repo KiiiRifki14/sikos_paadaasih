@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="id">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIKOS Paadaasih - Sistem Informasi Kos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      color: #212529;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(233, 236, 239, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #212529;
+      text-decoration: none;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .navbar-menu {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .navbar-link {
+      color: #495057;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .navbar-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #2563eb, #1d4ed8);
+      transition: width 0.3s;
+    }
+
+    .navbar-link:hover {
+      color: #2563eb;
+    }
+
+    .navbar-link:hover::after {
+      width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: white;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-outline:hover {
+      background: #2563eb;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border-bottom: 1px solid rgba(233, 236, 239, 0.8);
+      padding: 100px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(-20px, 20px) scale(1.1);
+      }
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #212529 0%, #495057 50%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
+      background-size: 200% auto;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% {
+        background-position: 0% center;
+      }
+      50% {
+        background-position: 100% center;
+      }
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: #6c757d;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #212529;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: #6c757d;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border: 1px solid rgba(233, 236, 239, 0.8);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+
+    /* Room Card */
+    .room-card {
+      background: white;
+      border: 1px solid rgba(233, 236, 239, 0.8);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .room-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .room-card:hover {
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+      transform: translateY(-6px);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .room-card:hover::before {
+      opacity: 1;
+    }
+
+    .room-image {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      position: relative;
+      transition: transform 0.3s;
+    }
+
+    .room-card:hover .room-image {
+      transform: scale(1.05);
+    }
+
+    .badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.95);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.95);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .room-content {
+      padding: 24px;
+    }
+
+    .room-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #212529;
+    }
+
+    .room-price {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .room-price span {
+      font-size: 14px;
+      font-weight: 400;
+      color: #6c757d;
+    }
+
+    .room-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #6c757d;
+    }
+
+    .room-features span {
+      background: #f8f9fa;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    /* Feature Card */
+    .feature-card {
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: scale(1.03);
+    }
+
+    .feature-icon {
+      font-size: 56px;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .feature-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #212529;
+    }
+
+    .feature-text {
+      color: #6c757d;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #bfdbfe;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+
+    .cta-section::before {
+      content: '✨';
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.1;
+      top: 20px;
+      left: 40px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .cta-section::after {
+      content: '🏠';
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.1;
+      bottom: 20px;
+      right: 40px;
+      animation: float 5s ease-in-out infinite reverse;
+    }
+
+    .cta-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #212529;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-text {
+      font-size: 18px;
+      color: #6c757d;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Footer */
+    .footer {
+      background: white;
+      border-top: 2px solid #e9ecef;
+      padding: 60px 24px 32px;
+      margin-top: 80px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-text {
+      color: #6c757d;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .footer-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #212529;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-link {
+      color: #6c757d;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #2563eb;
+      transform: translateX(4px);
+      display: inline-block;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 32px;
+      border-top: 2px solid #e9ecef;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar-menu {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .cta-title {
+        font-size: 28px;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Navigation Bar -->
+  <nav class="navbar">
+   <div class="navbar-container"><a href="landing.php" class="navbar-brand"> 🏠 SIKOS Paadaasih </a>
+    <div class="navbar-menu"><a href="#beranda" class="navbar-link">Beranda</a> <a href="#fitur" class="navbar-link">Fitur</a> <a href="#kamar" class="navbar-link">Kamar</a> <a href="#tentang" class="navbar-link">Tentang</a> <a href="login.php" class="btn btn-primary">🔐 Masuk</a>
+    </div>
+   </div>
+  </nav><!-- Hero Section -->
+  <section id="beranda" class="hero">
+   <div class="hero-content">
+    <h1>Temukan Kos Impian Anda</h1>
+    <p>Sistem pengelolaan kos yang mudah dan terpercaya untuk kehidupan yang lebih nyaman dan aman</p>
+    <div class="hero-buttons"><a href="#kamar" class="btn btn-primary">🔍 Cari Kamar Sekarang</a> <a href="register.php" class="btn btn-outline">📝 Daftar Sekarang</a>
+    </div>
+   </div>
+  </section><!-- Features Section -->
+  <section id="fitur" class="container">
+   <div class="section-header">
+    <h2 class="section-title">✨ Mengapa Memilih Kami?</h2>
+    <p class="section-subtitle">Nikmati berbagai fasilitas dan layanan terbaik untuk kenyamanan Anda</p>
+   </div>
+   <div class="grid grid-3">
+    <div class="card feature-card">
+     <div class="feature-icon">
+      🔒
+     </div>
+     <h3 class="feature-title">Keamanan 24/7</h3>
+     <p class="feature-text">CCTV dan penjaga kos siap membantu kapan saja untuk keamanan maksimal</p>
+    </div>
+    <div class="card feature-card">
+     <div class="feature-icon">
+      📍
+     </div>
+     <h3 class="feature-title">Lokasi Strategis</h3>
+     <p class="feature-text">Dekat kampus, pusat kota, dan transportasi umum yang mudah diakses</p>
+    </div>
+    <div class="card feature-card">
+     <div class="feature-icon">
+      ✨
+     </div>
+     <h3 class="feature-title">Fasilitas Lengkap</h3>
+     <p class="feature-text">Wi-Fi cepat, laundry, parkir luas, dan dapur bersama yang nyaman</p>
+    </div>
+    <div class="card feature-card">
+     <div class="feature-icon">
+      💳
+     </div>
+     <h3 class="feature-title">Pembayaran Mudah</h3>
+     <p class="feature-text">Sistem pembayaran online yang fleksibel dan aman</p>
+    </div>
+    <div class="card feature-card">
+     <div class="feature-icon">
+      🛠️
+     </div>
+     <h3 class="feature-title">Maintenance Cepat</h3>
+     <p class="feature-text">Tim maintenance siap menangani keluhan dengan cepat dan profesional</p>
+    </div>
+    <div class="card feature-card">
+     <div class="feature-icon">
+      📱
+     </div>
+     <h3 class="feature-title">Sistem Digital</h3>
+     <p class="feature-text">Kelola semua kebutuhan kos Anda melalui sistem informasi digital</p>
+    </div>
+   </div>
+  </section><!-- Rooms Section -->
+  <section id="kamar" class="container">
+   <div class="section-header">
+    <h2 class="section-title">🏠 Kamar Tersedia</h2>
+    <p class="section-subtitle">Pilih kamar yang sesuai dengan kebutuhan dan budget Anda</p>
+   </div>
+   <div class="grid grid-3"><!--?php
+      // TODO: Koneksi database dan query data kamar
+      // Contoh struktur PHP untuk fetch data dari database
+      /*
+      include 'config/database.php';
+      
+      $query = "SELECT * FROM kamar WHERE status = 'tersedia' LIMIT 6";
+      $result = mysqli_query($conn, $query);
+      
+      while($row = mysqli_fetch_assoc($result)) {
+      ?-->
+    <article class="room-card">
+     <div class="room-image"><!--?php echo $row['icon']; ?--> <span class="badge badge-<?php echo $row['status'] == 'tersedia' ? 'success' : 'danger'; ?>"> <!--?php echo $row['status'] == 'tersedia' ? '✓ Tersedia' : '✕ Terisi'; ?--> </span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name"><!--?php echo $row['nama_kamar']; ?--></h3>
+      <div class="room-price">
+       Rp <!--?php echo number_format($row['harga'], 0, ',', '.'); ?--> <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 <!--?php echo $row['ukuran']; ?--></span> <span><!--?php echo $row['fasilitas_1']; ?--></span> <span><!--?php echo $row['fasilitas_2']; ?--></span>
+      </div><a href="detail_kamar.php?id=<?php echo $row['id']; ?>" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article><!--?php
+      }
+      */
+      
+      // Sementara pakai data statis untuk demo
+      ?-->
+    <article class="room-card">
+     <div class="room-image">
+      🛏️ <span class="badge badge-success">✓ Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Standar A</h3>
+      <div class="room-price">
+       Rp 850.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 3x4m</span> <span>🛏️ Kasur</span> <span>🚿 K. Mandi</span>
+      </div><a href="detail_kamar.php?id=1" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article>
+    <article class="room-card">
+     <div class="room-image">
+      ❄️ <span class="badge badge-success">✓ Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Deluxe B</h3>
+      <div class="room-price">
+       Rp 1.200.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 4x5m</span> <span>❄️ AC</span> <span>📶 Wi-Fi</span>
+      </div><a href="detail_kamar.php?id=2" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article>
+    <article class="room-card">
+     <div class="room-image">
+      ⭐ <span class="badge badge-danger">✕ Terisi</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Premium C</h3>
+      <div class="room-price">
+       Rp 1.800.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 5x6m</span> <span>❄️ AC</span> <span>📺 TV</span>
+      </div><button class="btn btn-outline" style="width: 100%; cursor: not-allowed; opacity: 0.6;" disabled>Tidak Tersedia</button>
+     </div>
+    </article>
+    <article class="room-card">
+     <div class="room-image">
+      🪟 <span class="badge badge-success">✓ Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Standar D</h3>
+      <div class="room-price">
+       Rp 900.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 3x4m</span> <span>🪟 Jendela</span> <span>🛏️ Kasur</span>
+      </div><a href="detail_kamar.php?id=4" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article>
+    <article class="room-card">
+     <div class="room-image">
+      🌟 <span class="badge badge-success">✓ Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Deluxe E</h3>
+      <div class="room-price">
+       Rp 1.350.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 4x5m</span> <span>❄️ AC</span> <span>🪟 Balkon</span>
+      </div><a href="detail_kamar.php?id=5" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article>
+    <article class="room-card">
+     <div class="room-image">
+      👑 <span class="badge badge-success">✓ Tersedia</span>
+     </div>
+     <div class="room-content">
+      <h3 class="room-name">Kamar Premium F</h3>
+      <div class="room-price">
+       Rp 2.000.000 <span>/bulan</span>
+      </div>
+      <div class="room-features"><span>📏 5x6m</span> <span>❄️ AC</span> <span>📺 Smart TV</span>
+      </div><a href="detail_kamar.php?id=6" class="btn btn-primary" style="width: 100%; text-align: center;">Lihat Detail</a>
+     </div>
+    </article>
+   </div>
+  </section><!-- About Section -->
+  <section id="tentang" class="container">
+   <div class="section-header">
+    <h2 class="section-title">💬 Tentang SIKOS Paadaasih</h2>
+    <p class="section-subtitle">Sistem Informasi Kos yang dirancang untuk memudahkan pengelolaan dan meningkatkan kenyamanan</p>
+   </div>
+   <div class="card" style="max-width: 800px; margin: 0 auto; padding: 40px;">
+    <p style="font-size: 16px; line-height: 1.8; color: #495057; text-align: center; margin-bottom: 24px;">SIKOS Paadaasih adalah platform digital yang mengintegrasikan semua aspek pengelolaan kos dalam satu sistem yang mudah digunakan. Dari pencarian kamar, booking, pembayaran, hingga komunikasi dengan pengelola - semua bisa dilakukan dengan praktis melalui sistem kami.</p>
+    <div class="grid grid-3" style="margin-top: 32px;">
+     <div style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 700; color: #2563eb; margin-bottom: 8px;">
+       50+
+      </div>
+      <div style="color: #6c757d; font-size: 14px;">
+       Kamar Tersedia
+      </div>
+     </div>
+     <div style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 700; color: #10b981; margin-bottom: 8px;">
+       200+
+      </div>
+      <div style="color: #6c757d; font-size: 14px;">
+       Penghuni Aktif
+      </div>
+     </div>
+     <div style="text-align: center;">
+      <div style="font-size: 36px; font-weight: 700; color: #f59e0b; margin-bottom: 8px;">
+       4.8⭐
+      </div>
+      <div style="color: #6c757d; font-size: 14px;">
+       Rating Pengguna
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- CTA Section -->
+  <div class="container">
+   <div class="cta-section">
+    <h2 class="cta-title">🎉 Siap Mulai Pencarian Kos Anda?</h2>
+    <p class="cta-text">Daftar sekarang dan temukan kamar kos impian Anda dengan mudah!</p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;"><a href="register.php" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px;">📝 Daftar Gratis</a> <a href="#kamar" class="btn btn-outline" style="font-size: 16px; padding: 14px 32px;">🔍 Lihat Kamar</a>
+    </div>
+   </div>
+  </div><!-- Footer -->
+  <footer class="footer">
+   <div class="footer-container">
+    <div class="footer-grid">
+     <div>
+      <div class="footer-brand">
+       🏠 SIKOS Paadaasih
+      </div>
+      <p class="footer-text">Sistem Informasi Kos modern yang mengutamakan kenyamanan, keamanan, dan kemudahan dalam pengelolaan kos.</p>
+     </div>
+     <div>
+      <h4 class="footer-title">📞 Kontak</h4>
+      <div class="footer-text">
+       📍 Jl. Paadaasih No. 123, Bandung<br>
+        📞 0812-3456-7890<br>
+        ✉️ info@sikospaadaasih.com
+      </div>
+     </div>
+     <div>
+      <h4 class="footer-title">🔗 Link Cepat</h4>
+      <div class="footer-links"><a href="#beranda" class="footer-link">Beranda</a> <a href="#fitur" class="footer-link">Fitur</a> <a href="#kamar" class="footer-link">Kamar</a> <a href="#tentang" class="footer-link">Tentang</a> <a href="login.php" class="footer-link">Login</a>
+      </div>
+     </div>
+    </div>
+    <div class="footer-bottom">
+     <p>© 2025 SIKOS Paadaasih. All rights reserved. Made with ❤️ for Kampus Project</p>
+    </div>
+   </div>
+  </footer>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a08c60e42eba19c',t:'MTc2MzQ4MjYwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
